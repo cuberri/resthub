@@ -26,6 +26,17 @@ public class Group {
 	@JsonProperty("_rev")
 	@SuppressWarnings("unused")
 	private String rev;
+	
+	/**
+	 * Group's members
+	 */
+	List<User> members = new ArrayList<User>();
+	
+	/**
+	 * Group's members ids. serialized in CouchDB
+	 */
+	@JsonProperty("member_ids")
+	List<Object> memberIds = new ArrayList<Object>();
 
 	/**
 	 * User's primary key.
@@ -44,8 +55,35 @@ public class Group {
 	/**
 	 * Group's members
 	 */
-	public List<User> members = new ArrayList<User>();
-
+	@JsonIgnore
+	public List<User> getMembers() {
+		return new ArrayList<User>(members);
+	} // getMembers().
+	
+	/**
+	 * Add an existing member (which already have its id) to this group.
+	 * 
+	 * @param member The added member (must not be null).
+	 */
+	public void addMember(User member) {
+		assert(member != null);
+		assert(member.getId() != null);
+		members.add(member);
+		memberIds.add(member.getId());
+	} // addMember().
+	
+	/**
+	 * Remove an existing member (which already have its id) from this group.
+	 * 
+	 * @param member The removed member (must not be null).
+	 */
+	public void removeMember(User member) {
+		assert(member != null);
+		assert(member.getId() != null);
+		members.remove(member);
+		memberIds.remove(member.getId());
+	} // removeMember().
+	
 	/**
 	 * Indicates if an object is logically equals to the current object.
 	 * 

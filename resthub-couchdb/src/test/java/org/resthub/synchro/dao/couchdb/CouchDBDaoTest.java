@@ -14,6 +14,8 @@ import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbInstance;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Unit test of couchdb implementation of SynchroDAO.
@@ -38,6 +40,11 @@ public class CouchDBDaoTest {
 	 */
 	protected String id;
 
+	/**
+	 * Test class's logger
+	 */
+	protected Logger logger = LoggerFactory.getLogger(getClass());
+	
 	// -----------------------------------------------------------------------------------------------------------------
 	// Setup/finalize
 
@@ -119,6 +126,7 @@ public class CouchDBDaoTest {
 	public void testRelationship() throws Exception {
 		Group g1 = new Group();
 		g1.name = "group 1";
+		logger.info("[testRelationship] --- Save group without users");
 		groupDao.save(g1);
 		assertNotNull("Group g1 not found!", g1.getId());
 		
@@ -128,21 +136,23 @@ public class CouchDBDaoTest {
 		userDao.save(u1);
 		assertNotNull("User u1 not found!", u1.getId());
 		
-		g1.members.add(u1);
+		g1.addMember(u1);
 		groupDao.save(g1);
 		Group foundGroup = groupDao.get(g1.getId());
-		assertTrue("User u1 not a member of g1", foundGroup.members.contains(u1));
+		assertTrue("User u1 not a member of g1", foundGroup.getMembers().contains(u1));
 		
-		/*u1.firstName = "Gérard";
+		u1.firstName = "Gérard";
 		userDao.save(u1);
 		User foundUser = userDao.get(u1.getId());
+		foundGroup = groupDao.get(g1.getId());
 		assertEquals("User u1 first name has not serialized", "Gérard", foundUser.firstName);
-		assertEquals("User u1 in g1 first name has not serialized", "Gérard", foundGroup.members.get(0).firstName);
-		*/
-		g1.members.remove(0);
+		assertEquals("User u1 in g1 first name has not serialized", "Gérard", foundGroup.getMembers().get(0).firstName);
+		
+		g1.removeMember(u1);
+
 		groupDao.save(g1);
 		foundGroup = groupDao.get(g1.getId());
-		assertFalse("User u1 is still a member of g1", foundGroup.members.contains(u1));
+		assertFalse("User u1 is still a member of g1", foundGroup.getMembers().contains(u1));
 	}
 
 
