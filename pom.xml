@@ -555,9 +555,9 @@
                         <artifactId>spring-aop</artifactId>
                     </exclusion>
                     <exclusion>
-		   				<groupId>com.sun.jersey</groupId>
-		   				<artifactId>jersey-grizzly2</artifactId>
-					</exclusion>
+                        <groupId>com.sun.jersey</groupId>
+                        <artifactId>jersey-grizzly2</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -590,17 +590,19 @@
     </dependencyManagement>
 
     <repositories>
-		<!-- Contains all RESThub artifacts and transitive dependencies -->
+        <!-- Contains all RESThub artifacts and transitive dependencies -->
         <repository>
             <id>resthub</id>
             <url>http://resthub.org/nexus/content/groups/resthub</url>
         </repository>
 
-        <!-- Spring Snapshots -->
+        <!-- Spring Milestone -->
         <repository>
             <id>com.springsource.repository.maven.milestone</id>
             <url>http://maven.springframework.org/milestone/</url>
-            <snapshots><enabled>true</enabled></snapshots>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
