@@ -597,13 +597,11 @@
         </repository>
 
         <!-- Spring Snapshots -->
-        <repositories>
-            <repository>
-                <id>com.springsource.repository.maven.snapshot</id>
-                <url>http://maven.springframework.org/snapshot/</url>
-                <snapshots><enabled>true</enabled></snapshots>
-            </repository>
-        </repositories>
+        <repository>
+            <id>com.springsource.repository.maven.milestone</id>
+            <url>http://maven.springframework.org/milestone/</url>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
     </repositories>
 
     <pluginRepositories>
