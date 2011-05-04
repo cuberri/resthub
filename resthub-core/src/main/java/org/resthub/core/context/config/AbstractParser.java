@@ -1,10 +1,13 @@
 package org.resthub.core.context.config;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.beans.factory.xml.XmlReaderContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ComponentScanBeanDefinitionParser;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
@@ -16,68 +19,79 @@ import org.w3c.dom.Element;
  * 
  * @author bmeurant <Baptiste Meurant>
  */
-public abstract class AbstractParser extends ComponentScanBeanDefinitionParser implements ResthubBeanDefinitionParser {
+public abstract class AbstractParser implements ResthubBeanDefinitionParser {
 
 	private static final String BASE_PACKAGE_ATTRIBUTE = "base-package";
 
-	private static final String USE_DEFAULT_FILTERS_ATTRIBUTE = "use-default-filters";
+	protected Element element;
 
 	/**
 	 * {@InheritDoc}
 	 */
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
-		String[] basePackages = StringUtils.tokenizeToStringArray(element
-				.getAttribute(BASE_PACKAGE_ATTRIBUTE),
+
+		this.element = element;
+
+		String[] basePackages = StringUtils.tokenizeToStringArray(
+				element.getAttribute(BASE_PACKAGE_ATTRIBUTE),
 				ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
 
 		// Actually scan for entities definitions and register them.
-		AbstractClassPathScanner scanner = configureScanner(parserContext,
+		ResthubComponentProvider provider = configureScanner(parserContext,
 				element);
-		scanner.doScan(basePackages);
-		//registerResources(resources, element);
+
+		Set<String> resources = new HashSet<String>();
+
+		for (String basePackage : basePackages) {
+
+			for (BeanDefinition beanDefinition : provider
+					.findCandidateComponents(basePackage)) {
+				resources.add(beanDefinition.getBeanClassName());
+			}
+
+		}
+		
+		registerBeanDefinition(resources, parserContext);
 
 		return null;
 	}
 
 	/**
 	 * {@InheritDoc}
-	 */
-	protected AbstractClassPathScanner configureScanner(
-			ParserContext parserContext, Element element) {
-		XmlReaderContext readerContext = parserContext.getReaderContext();
-
-		boolean useDefaultFilters = isDefaultFiltersEnabled(element);
-
-		// Delegate bean definition registration to scanner class.
-		AbstractClassPathScanner scanner = createScanner(readerContext,
-				useDefaultFilters, element);
-		scanner.setResourceLoader(readerContext.getResourceLoader());
-
-		parseTypeFilters(element, scanner, readerContext, parserContext);
-
-		return scanner;
-	}
-
-	/**
-	 * Read configuration to decide default filters are activated or not
 	 * 
-	 * @param element
-	 *            configuration element
-	 * @return true if defaultFilters are activated, false otherwise
 	 */
-	private boolean isDefaultFiltersEnabled(Element element) {
-		boolean useDefaultFilters = true;
-		if (element.hasAttribute(USE_DEFAULT_FILTERS_ATTRIBUTE)) {
-			useDefaultFilters = Boolean.valueOf(element
-					.getAttribute(USE_DEFAULT_FILTERS_ATTRIBUTE));
-		}
-		return useDefaultFilters;
+	protected void registerBeanDefinition(Set<String> resources,
+			ParserContext parserContext) {
+
+		BeanDefinition beanDefinition = createBeanDefinition(resources);
+		String beanName = BeanDefinitionReaderUtils.generateBeanName(
+				beanDefinition, parserContext.getRegistry());
+
+		parserContext.getRegistry().registerBeanDefinition(beanName,
+				beanDefinition);
 	}
 
 	/**
 	 * {@InheritDoc}
 	 */
-	protected abstract AbstractClassPathScanner createScanner(
-			XmlReaderContext readerContext, boolean useDefaultFilters, Element element);
+	protected ResthubComponentProvider configureScanner(
+			ParserContext parserContext, Element element) {
+		XmlReaderContext readerContext = parserContext.getReaderContext();
+
+		// Delegate bean definition registration to provider class.
+		ResthubComponentProvider provider = createProvider();
+		provider.setResourceLoader(readerContext.getResourceLoader());
+
+		return provider;
+	}
+
+	/**
+	 * {@InheritDoc}
+	 */
+	protected abstract ResthubComponentProvider createProvider();
+
+	protected abstract Class<?> getBeanClass();
+
+	protected abstract BeanDefinition createBeanDefinition(Set<String> resources);
 
 }
