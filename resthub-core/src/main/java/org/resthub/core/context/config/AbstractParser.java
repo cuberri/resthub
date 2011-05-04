@@ -8,6 +8,7 @@ import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.beans.factory.xml.XmlReaderContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
@@ -21,77 +22,77 @@ import org.w3c.dom.Element;
  */
 public abstract class AbstractParser implements ResthubBeanDefinitionParser {
 
-	private static final String BASE_PACKAGE_ATTRIBUTE = "base-package";
+    private static final String BASE_PACKAGE_ATTRIBUTE = "base-package";
+    protected Element element;
 
-	protected Element element;
+    /**
+     * {@InheritDoc}
+     */
+    public BeanDefinition parse(Element element, ParserContext parserContext) {
 
-	/**
-	 * {@InheritDoc}
-	 */
-	public BeanDefinition parse(Element element, ParserContext parserContext) {
+        this.element = element;
 
-		this.element = element;
+        String[] basePackages = StringUtils.tokenizeToStringArray(
+                element.getAttribute(BASE_PACKAGE_ATTRIBUTE),
+                ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
 
-		String[] basePackages = StringUtils.tokenizeToStringArray(
-				element.getAttribute(BASE_PACKAGE_ATTRIBUTE),
-				ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
+        // Actually scan for entities definitions and register them.
+        ResthubComponentProvider provider = configureScanner(parserContext, element);
 
-		// Actually scan for entities definitions and register them.
-		ResthubComponentProvider provider = configureScanner(parserContext,
-				element);
+        Set<String> resources = new HashSet<String>();
 
-		Set<String> resources = new HashSet<String>();
+        for (String basePackage : basePackages) {
 
-		for (String basePackage : basePackages) {
+            for (BeanDefinition beanDefinition : provider.findCandidateComponents(basePackage)) {
+                resources.add(beanDefinition.getBeanClassName());
+            }
 
-			for (BeanDefinition beanDefinition : provider
-					.findCandidateComponents(basePackage)) {
-				resources.add(beanDefinition.getBeanClassName());
-			}
+        }
 
-		}
-		
-		registerBeanDefinition(resources, parserContext);
+        registerBeanDefinition(resources, parserContext);
 
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * {@InheritDoc}
-	 * 
-	 */
-	protected void registerBeanDefinition(Set<String> resources,
-			ParserContext parserContext) {
+    /**
+     * {@InheritDoc}
+     * 
+     */
+    protected void registerBeanDefinition(Set<String> resources,
+            ParserContext parserContext) {
 
-		BeanDefinition beanDefinition = createBeanDefinition(resources);
-		String beanName = BeanDefinitionReaderUtils.generateBeanName(
-				beanDefinition, parserContext.getRegistry());
+        BeanDefinition beanDefinition = createBeanDefinition(resources);
+        String beanName = BeanDefinitionReaderUtils.generateBeanName(
+                beanDefinition, parserContext.getRegistry());
 
-		parserContext.getRegistry().registerBeanDefinition(beanName,
-				beanDefinition);
-	}
+        parserContext.getRegistry().registerBeanDefinition(beanName,
+                beanDefinition);
+    }
 
-	/**
-	 * {@InheritDoc}
-	 */
-	protected ResthubComponentProvider configureScanner(
-			ParserContext parserContext, Element element) {
-		XmlReaderContext readerContext = parserContext.getReaderContext();
+    /**
+     * {@InheritDoc}
+     */
+    protected ResthubComponentProvider configureScanner(
+            ParserContext parserContext, Element element) {
+        XmlReaderContext readerContext = parserContext.getReaderContext();
 
-		// Delegate bean definition registration to provider class.
-		ResthubComponentProvider provider = createProvider();
-		provider.setResourceLoader(readerContext.getResourceLoader());
+        // Delegate bean definition registration to provider class.
+        ResthubComponentProvider provider = createProvider();
+        ResourceLoader resourceLoader = readerContext.getResourceLoader();
+        provider.setResourceLoader(resourceLoader);
+        
+        TypeFilterParser parser = new TypeFilterParser(resourceLoader.getClassLoader(), readerContext);
+        parser.parseFilters(element, provider);
 
-		return provider;
-	}
+        return provider;
+    }
 
-	/**
-	 * {@InheritDoc}
-	 */
-	protected abstract ResthubComponentProvider createProvider();
+    /**
+     * {@InheritDoc}
+     */
+    protected abstract ResthubComponentProvider createProvider();
 
-	protected abstract Class<?> getBeanClass();
+    protected abstract Class<?> getBeanClass();
 
-	protected abstract BeanDefinition createBeanDefinition(Set<String> resources);
-
+    protected abstract BeanDefinition createBeanDefinition(Set<String> resources);
 }
