@@ -20,7 +20,6 @@ public class IncludeEntitiesParser extends
 		return EntityListIncluderBean.class;
 	}
 
-	@Override
 	public String getElementName() {
 		return "include-entities";
 	}

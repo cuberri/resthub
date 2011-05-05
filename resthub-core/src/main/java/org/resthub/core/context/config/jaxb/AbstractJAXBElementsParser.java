@@ -1,10 +1,12 @@
 package org.resthub.core.context.config.jaxb;
 
-import org.resthub.core.context.config.AbstractClassPathScanner;
+import java.util.Set;
+
 import org.resthub.core.context.config.AbstractParser;
+import org.resthub.core.context.config.ResthubComponentProvider;
 import org.resthub.core.context.jaxb.JAXBElementListBean;
-import org.springframework.beans.factory.xml.XmlReaderContext;
-import org.w3c.dom.Element;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 
 /**
  * This class provide utilities for xml binding resources scanning defined by a scanning
@@ -22,10 +24,16 @@ public abstract class AbstractJAXBElementsParser extends
 	/**
 	 * {@InheritDoc}
 	 */
-	protected AbstractClassPathScanner createScanner(
-			XmlReaderContext readerContext, boolean useDefaultFilters, Element element) {
-		return new ClassPathJAXBElementsScanner(readerContext
-				.getRegistry(), useDefaultFilters, this.getBeanClass());
+	protected ResthubComponentProvider createProvider() {
+		return new JAXBElementComponentProvider();
+	}
+	
+	protected BeanDefinition createBeanDefinition(Set<String> elements) {
+		BeanDefinitionBuilder builder = BeanDefinitionBuilder
+				.genericBeanDefinition();
+		builder.getRawBeanDefinition().setBeanClass(this.getBeanClass());
+		builder.addPropertyValue("elements", elements);
+		return builder.getRawBeanDefinition();
 	}
 
 }
