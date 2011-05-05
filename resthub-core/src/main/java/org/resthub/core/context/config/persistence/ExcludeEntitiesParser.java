@@ -20,7 +20,6 @@ public class ExcludeEntitiesParser extends
 		return EntityListExcluderBean.class;
 	}
 
-	@Override
 	public String getElementName() {
 		return "exclude-entities";
 	}

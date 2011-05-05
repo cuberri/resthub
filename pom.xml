@@ -32,7 +32,8 @@
         <hibernate.validator.version>4.1.0.Final</hibernate.validator.version>
         <h2.version>1.3.154</h2.version>
         <hades.version>2.0.2.RELEASE</hades.version>
-        <spring.version>3.0.5.RELEASE</spring.version>
+        <spring.version>3.1.0.M1</spring.version>
+        <spring.data.jpa.version>1.0.0.M2</spring.data.jpa.version>
         <spring.security.version>3.0.5.RELEASE</spring.security.version>
         <log4j.version>1.2.16</log4j.version>
         <slf4j.version>1.6.0</slf4j.version>
@@ -396,6 +397,13 @@
                 <artifactId>spring-security-web</artifactId>
                 <version>${spring.security.version}</version>
             </dependency>
+            
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-jpa</artifactId>
+                <version>${spring.data.jpa.version}</version>
+            </dependency>
+            
             <dependency>
                 <groupId>org.synyx.hades</groupId>
                 <artifactId>org.synyx.hades</artifactId>
@@ -555,9 +563,9 @@
                         <artifactId>spring-aop</artifactId>
                     </exclusion>
                     <exclusion>
-		   				<groupId>com.sun.jersey</groupId>
-		   				<artifactId>jersey-grizzly2</artifactId>
-					</exclusion>
+                        <groupId>com.sun.jersey</groupId>
+                        <artifactId>jersey-grizzly2</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -590,10 +598,19 @@
     </dependencyManagement>
 
     <repositories>
-		<!-- Contains all RESThub artifacts and transitive dependencies -->
+        <!-- Contains all RESThub artifacts and transitive dependencies -->
         <repository>
             <id>resthub</id>
             <url>http://resthub.org/nexus/content/groups/resthub</url>
+        </repository>
+
+        <!-- Spring Milestone -->
+        <repository>
+            <id>com.springsource.repository.maven.milestone</id>
+            <url>http://maven.springframework.org/milestone/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
