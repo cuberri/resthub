@@ -17,10 +17,7 @@
 		package that are holding @XmlRootElement annotation excluding entities extending
 		ConfigAbstractResource
 	-->
-	<resthub:exclude-jaxb-elements
-		base-package="org.resthub.core.context.model"
-		use-default-filters="false">
-		<resthub:include-filter type="assignable"
-			expression="org.resthub.core.context.model.ConfigAbstractResource" />
+	<resthub:exclude-jaxb-elements base-package="org.resthub.core.context.model" use-default-filters="false">
+		<resthub:include-filter type="assignable" expression="org.resthub.core.context.model.ConfigAbstractResource" />
 	</resthub:exclude-jaxb-elements>
 </beans>

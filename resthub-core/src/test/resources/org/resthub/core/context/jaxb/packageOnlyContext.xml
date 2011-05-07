@@ -16,6 +16,5 @@
 		Scan all jaxb elements from org.resthub.core.context.resthub.model
 		package
 	-->
-	<resthub:include-jaxb-elements
-		base-package="org.resthub.core.context.model" />
+	<resthub:include-jaxb-elements base-package="org.resthub.core.context.model" />
 </beans>

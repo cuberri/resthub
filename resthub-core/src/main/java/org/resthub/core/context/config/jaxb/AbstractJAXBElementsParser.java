@@ -25,6 +25,7 @@ public abstract class AbstractJAXBElementsParser extends AbstractResthubParser {
         ClassLoader classLoader = parserContext.getReaderContext().getResourceLoader().getClassLoader();
 
 		JAXBElementScanSpec spec = new JAXBElementScanSpec(element.getAttribute("base-package"));
+        spec.useDefaultFilters(element.getAttribute("use-default-filters"));
         
 		// Parse exclude and include filter elements.
 		NodeList nodeList = element.getChildNodes();

@@ -24,7 +24,7 @@ abstract class AbstractResthubScanExecutor<S extends ResthubScanSpec> extends Ab
         ResourceLoader resourceLoader = specificationContext.getResourceLoader();
         Environment environment = specificationContext.getEnvironment();
 
-        ClassPathScanningCandidateComponentProvider scanner = createScanner();
+        ClassPathScanningCandidateComponentProvider scanner = createScanner(spec);
 
         scanner.setResourceLoader(resourceLoader);
         scanner.setEnvironment(environment);
@@ -56,7 +56,7 @@ abstract class AbstractResthubScanExecutor<S extends ResthubScanSpec> extends Ab
         registry.registerBeanDefinition(beanName, beanDefinition);
     }
     
-    protected abstract ResthubComponentProvider createScanner();
+    protected abstract ResthubComponentProvider createScanner(S spec);
     
     protected abstract BeanDefinition createBeanDefinition(Set<String> resources, S spec);
 }

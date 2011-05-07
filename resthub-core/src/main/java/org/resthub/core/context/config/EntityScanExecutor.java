@@ -14,8 +14,8 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 class EntityScanExecutor extends AbstractResthubScanExecutor<EntityScanSpec> {
 
     @Override
-    protected ResthubComponentProvider createScanner() {
-        return new EntityComponentProvider();
+    protected ResthubComponentProvider createScanner(EntityScanSpec spec) {
+        return new EntityComponentProvider(spec.useDefaultFilters());
     }
 
     @Override

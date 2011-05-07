@@ -20,10 +20,8 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
  */
 public class JAXBElementComponentProvider extends ResthubComponentProvider {
 
-	public JAXBElementComponentProvider() {
-		super();
-		
-		this.addIncludeFilter(new AnnotationTypeFilter(XmlRootElement.class));
+	public JAXBElementComponentProvider(boolean useDefaultFilters) {
+		super(useDefaultFilters);
 	}
 	
 	@SuppressWarnings("unchecked")

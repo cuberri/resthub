@@ -17,9 +17,8 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
  */
 public abstract class ResthubComponentProvider extends ClassPathScanningCandidateComponentProvider {
 
-	public ResthubComponentProvider() {
-		super(false);
-		registerDefaultFilters();
+	public ResthubComponentProvider(boolean useDefaultFilters) {
+		super(useDefaultFilters);
 	}
 
 	/**

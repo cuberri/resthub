@@ -16,6 +16,10 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
  * 
  */
 public class EntityComponentProvider extends ResthubComponentProvider {
+    
+    public EntityComponentProvider(boolean useDefaultFilters) {
+		super(useDefaultFilters);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

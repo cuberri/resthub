@@ -25,12 +25,14 @@ import org.springframework.util.StringUtils;
 public abstract class ResthubScanSpec extends AbstractFeatureSpecification {
 
     public enum Type {
+
         EXCLUDER, INCLUDER;
     }
     //private static final int EXCLUDER = 0;
     //private static final int EXCLUDER = 1;
     private List<String> basePackages = new ArrayList<String>();
     private Type type = Type.INCLUDER;
+    private Boolean useDefaultFilters;
     private List<Object> includeFilters = new ArrayList<Object>();
     private List<Object> excludeFilters = new ArrayList<Object>();
 
@@ -41,7 +43,7 @@ public abstract class ResthubScanSpec extends AbstractFeatureSpecification {
             addBasePackage(basePackage);
         }
     }
-    
+
     ResthubScanSpec addBasePackage(String basePackage) {
         if (StringUtils.hasText(basePackage)) {
             this.basePackages.add(basePackage);
@@ -52,14 +54,30 @@ public abstract class ResthubScanSpec extends AbstractFeatureSpecification {
     String[] basePackages() {
         return this.basePackages.toArray(new String[this.basePackages.size()]);
     }
-    
+
     public ResthubScanSpec setType(Type type) {
         this.type = type;
         return this;
     }
-    
+
     Type type() {
         return type;
+    }
+
+    public ResthubScanSpec useDefaultFilters(Boolean useDefaultFilters) {
+        this.useDefaultFilters = useDefaultFilters;
+        return this;
+    }
+
+    public ResthubScanSpec useDefaultFilters(String useDefaultFilters) {
+        if (StringUtils.hasText(useDefaultFilters)) {
+            this.useDefaultFilters = Boolean.valueOf(useDefaultFilters);
+        }
+        return this;
+    }
+
+    Boolean useDefaultFilters() {
+        return this.useDefaultFilters;
     }
 
     public ResthubScanSpec includeFilters(TypeFilter... includeFilters) {

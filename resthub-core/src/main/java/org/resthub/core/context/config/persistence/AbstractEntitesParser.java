@@ -26,6 +26,7 @@ public abstract class AbstractEntitesParser extends AbstractResthubParser {
         ClassLoader classLoader = parserContext.getReaderContext().getResourceLoader().getClassLoader();
 
         EntityScanSpec spec = new EntityScanSpec(element.getAttribute("base-package"));
+        spec.useDefaultFilters(element.getAttribute("use-default-filters"));
 
         String persistenceUnitName = DEFAULT_PERSISTENCE_UNIT_NAME;
         if (element.hasAttribute("persistence-unit-name")) {

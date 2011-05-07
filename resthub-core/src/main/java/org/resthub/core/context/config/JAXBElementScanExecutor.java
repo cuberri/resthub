@@ -14,8 +14,8 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 class JAXBElementScanExecutor extends AbstractResthubScanExecutor<JAXBElementScanSpec> {
 
     @Override
-    protected ResthubComponentProvider createScanner() {
-        return new JAXBElementComponentProvider();
+    protected ResthubComponentProvider createScanner(JAXBElementScanSpec spec) {
+        return new JAXBElementComponentProvider(spec.useDefaultFilters());
     }
 
     @Override
