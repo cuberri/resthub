@@ -1,8 +1,10 @@
 package org.resthub.core.context.config.jaxb;
 
-import org.resthub.core.context.jaxb.JAXBElementListBean;
-import org.resthub.core.context.jaxb.JAXBElementListExcluderBean;
-
+import org.resthub.core.context.config.JAXBElementScanSpec;
+import org.resthub.core.context.config.ResthubScanSpec.Type;
+import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.context.config.FeatureSpecification;
+import org.w3c.dom.Element;
 
 /**
  * This class scan entities defined by a scanning configuration in application
@@ -11,18 +13,19 @@ import org.resthub.core.context.jaxb.JAXBElementListExcluderBean;
  * later (on bean initialization phasis)
  * 
  * @author bmeurant <Baptiste Meurant>
+ * @author Loïc Frering <loic.frering@gmail.com>
  */
-public class ExcludeJAXBElementsParser extends
-		AbstractJAXBElementsParser {
+public class ExcludeJAXBElementsParser extends AbstractJAXBElementsParser {
 
-	@Override
-	protected Class<? extends JAXBElementListBean> getBeanClass() {
-		return JAXBElementListExcluderBean.class;
-	}
+    @Override
+    protected FeatureSpecification doParse(Element element, ParserContext parserContext) {
+        JAXBElementScanSpec spec = (JAXBElementScanSpec) super.doParse(element, parserContext);
+        spec.setType(Type.EXCLUDER);
+        return spec;
+    }
 
-	@Override
-	public String getElementName() {
-		return "exclude-jaxb-elements";
-	}
-	
+    @Override
+    public String getElementName() {
+        return "exclude-jaxb-elements";
+    }
 }

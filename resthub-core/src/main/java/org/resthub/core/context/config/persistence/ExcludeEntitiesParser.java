@@ -1,7 +1,10 @@
 package org.resthub.core.context.config.persistence;
 
-import org.resthub.core.context.persistence.EntityListBean;
-import org.resthub.core.context.persistence.EntityListExcluderBean;
+import org.resthub.core.context.config.EntityScanSpec;
+import org.resthub.core.context.config.ResthubScanSpec.Type;
+import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.context.config.FeatureSpecification;
+import org.w3c.dom.Element;
 
 
 /**
@@ -12,15 +15,16 @@ import org.resthub.core.context.persistence.EntityListExcluderBean;
  * 
  * @author bmeurant <Baptiste Meurant>
  */
-public class ExcludeEntitiesParser extends
-		AbstractEntitesParser {
+public class ExcludeEntitiesParser extends AbstractEntitesParser {
 
-	@Override
-	protected Class<? extends EntityListBean> getBeanClass() {
-		return EntityListExcluderBean.class;
-	}
-
-	public String getElementName() {
+    @Override
+    protected FeatureSpecification doParse(Element element, ParserContext parserContext) {
+        EntityScanSpec spec = (EntityScanSpec) super.doParse(element, parserContext);
+        spec.setType(Type.EXCLUDER);
+        return spec;
+    }
+    
+    public String getElementName() {
 		return "exclude-entities";
 	}
 

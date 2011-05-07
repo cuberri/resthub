@@ -15,8 +15,7 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
  * @author bmeurant <Baptiste Meurant>
  * 
  */
-public abstract class ResthubComponentProvider extends
-		ClassPathScanningCandidateComponentProvider {
+public abstract class ResthubComponentProvider extends ClassPathScanningCandidateComponentProvider {
 
 	public ResthubComponentProvider() {
 		super(false);
@@ -30,8 +29,7 @@ public abstract class ResthubComponentProvider extends
 	 * inherited class by always returning true
 	 */
 	@Override
-	protected boolean isCandidateComponent(
-			AnnotatedBeanDefinition beanDefinition) {
+	protected boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
 		return true;
 	}
 

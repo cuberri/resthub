@@ -1,12 +1,12 @@
 package org.resthub.core.context.config.persistence;
 
-import java.util.Set;
-
-import org.resthub.core.context.config.AbstractParser;
-import org.resthub.core.context.persistence.EntityListBean;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.resthub.core.context.config.AbstractResthubParser;
+import org.resthub.core.context.config.EntityScanSpec;
+import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.context.config.FeatureSpecification;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * This class provide utilities for entities scanning defined by a scanning
@@ -15,49 +15,40 @@ import org.w3c.dom.Element;
  * Concrete implementations should be provided
  * 
  * @author bmeurant <Baptiste Meurant>
+ * @author Loïc Frering <loic.frering@gmail.com>
  */
-public abstract class AbstractEntitesParser extends AbstractParser {
+public abstract class AbstractEntitesParser extends AbstractResthubParser {
 
-	private static final String DEFAULT_PERSISTENCE_UNIT_NAME = "resthub";
-	private static final String PERSISTENCE_UNIT_NAME = "persistence-unit-name";
+    private static final String DEFAULT_PERSISTENCE_UNIT_NAME = "resthub";
 
-	protected abstract Class<? extends EntityListBean> getBeanClass();
+    @Override
+    protected FeatureSpecification doParse(Element element, ParserContext parserContext) {
+        ClassLoader classLoader = parserContext.getReaderContext().getResourceLoader().getClassLoader();
 
-	/**
-	 * Determines in which persistence unit name entities should be added. This
-	 * can be specified as a configuration option. If not, default persistence
-	 * unit name is used
-	 * 
-	 * @param element
-	 *            configuration element
-	 * @return the persistence unit name
-	 */
-	protected String getPersistenceUnitName(Element element) {
-		String persistenceUnitName = DEFAULT_PERSISTENCE_UNIT_NAME;
+        EntityScanSpec spec = new EntityScanSpec(element.getAttribute("base-package"));
 
-		if (element.hasAttribute(PERSISTENCE_UNIT_NAME)) {
-			persistenceUnitName = element.getAttribute(PERSISTENCE_UNIT_NAME);
-		}
+        String persistenceUnitName = DEFAULT_PERSISTENCE_UNIT_NAME;
+        if (element.hasAttribute("persistence-unit-name")) {
+            persistenceUnitName = element.getAttribute("persistence-unit-name");
+        }
+        spec.setPersistenceUnitName(persistenceUnitName);
 
-		return persistenceUnitName;
-	}
+        // Parse exclude and include filter elements.
+        NodeList nodeList = element.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                String localName = parserContext.getDelegate().getLocalName(node);
+                String filterType = ((Element) node).getAttribute("type");
+                String expression = ((Element) node).getAttribute("expression");
+                if ("include-filter".equals(localName)) {
+                    spec.addIncludeFilter(filterType, expression, classLoader);
+                } else if ("exclude-filter".equals(localName)) {
+                    spec.addExcludeFilter(filterType, expression, classLoader);
+                }
+            }
+        }
 
-	/**
-	 * {@InheritDoc}
-	 */
-	@Override
-	protected EntityComponentProvider createProvider() {
-		return new EntityComponentProvider();
-	}
-
-	protected BeanDefinition createBeanDefinition(Set<String> entities) {
-		BeanDefinitionBuilder builder = BeanDefinitionBuilder
-				.genericBeanDefinition();
-		builder.getRawBeanDefinition().setBeanClass(this.getBeanClass());
-		builder.addPropertyValue("entities", entities);
-		builder.addPropertyValue("persistenceUnitName",
-				this.getPersistenceUnitName(this.element));
-		return builder.getRawBeanDefinition();
-	}
-
+        return spec;
+    }
 }

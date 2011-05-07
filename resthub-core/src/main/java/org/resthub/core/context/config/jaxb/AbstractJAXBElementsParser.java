@@ -1,12 +1,13 @@
 package org.resthub.core.context.config.jaxb;
 
-import java.util.Set;
 
-import org.resthub.core.context.config.AbstractParser;
-import org.resthub.core.context.config.ResthubComponentProvider;
-import org.resthub.core.context.jaxb.JAXBElementListBean;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.resthub.core.context.config.AbstractResthubParser;
+import org.resthub.core.context.config.JAXBElementScanSpec;
+import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.context.config.FeatureSpecification;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * This class provide utilities for xml binding resources scanning defined by a scanning
@@ -15,25 +16,35 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
  * Concrete implementations should be provided
  * 
  * @author bmeurant <Baptiste Meurant>
+ * @author Loïc Frering <loic.frering@gmail.com>
  */
-public abstract class AbstractJAXBElementsParser extends
-		AbstractParser {
+public abstract class AbstractJAXBElementsParser extends AbstractResthubParser {
 
-	protected abstract Class<? extends JAXBElementListBean> getBeanClass();
-	
-	/**
-	 * {@InheritDoc}
-	 */
-	protected ResthubComponentProvider createProvider() {
-		return new JAXBElementComponentProvider();
-	}
-	
-	protected BeanDefinition createBeanDefinition(Set<String> elements) {
-		BeanDefinitionBuilder builder = BeanDefinitionBuilder
-				.genericBeanDefinition();
-		builder.getRawBeanDefinition().setBeanClass(this.getBeanClass());
-		builder.addPropertyValue("elements", elements);
-		return builder.getRawBeanDefinition();
-	}
+    @Override
+    protected FeatureSpecification doParse(Element element, ParserContext parserContext) {
+        ClassLoader classLoader = parserContext.getReaderContext().getResourceLoader().getClassLoader();
+
+		JAXBElementScanSpec spec = new JAXBElementScanSpec(element.getAttribute("base-package"));
+        
+		// Parse exclude and include filter elements.
+		NodeList nodeList = element.getChildNodes();
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			Node node = nodeList.item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE) {
+				String localName = parserContext.getDelegate().getLocalName(node);
+				String filterType = ((Element)node).getAttribute("type");
+				String expression = ((Element)node).getAttribute("expression");
+				if ("include-filter".equals(localName)) {
+					spec.addIncludeFilter(filterType, expression, classLoader);
+				}
+				else if ("exclude-filter".equals(localName)) {
+					spec.addExcludeFilter(filterType, expression, classLoader);
+				}
+			}
+		}
+
+		return spec;
+    }
+
 
 }
