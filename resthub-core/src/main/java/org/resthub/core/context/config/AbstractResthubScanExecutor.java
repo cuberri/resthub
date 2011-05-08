@@ -16,7 +16,7 @@ import org.springframework.core.type.filter.TypeFilter;
  *
  * @author Loïc Frering <loic.frering@gmail.com>
  */
-abstract class AbstractResthubScanExecutor<S extends ResthubScanSpec> extends AbstractSpecificationExecutor<S> {
+public abstract class AbstractResthubScanExecutor<S extends ResthubScanSpec> extends AbstractSpecificationExecutor<S> {
 
     @Override
     protected void doExecute(S spec, SpecificationContext specificationContext) {

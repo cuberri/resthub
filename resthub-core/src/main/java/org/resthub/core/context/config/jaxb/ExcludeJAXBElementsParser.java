@@ -1,6 +1,5 @@
 package org.resthub.core.context.config.jaxb;
 
-import org.resthub.core.context.config.JAXBElementScanSpec;
 import org.resthub.core.context.config.ResthubScanSpec.Type;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.context.config.FeatureSpecification;

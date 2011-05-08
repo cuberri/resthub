@@ -1,7 +1,8 @@
-package org.resthub.core.context.config;
+package org.resthub.core.context.config.jaxb;
 
 import java.util.Set;
-import org.resthub.core.context.config.jaxb.JAXBElementComponentProvider;
+import org.resthub.core.context.config.AbstractResthubScanExecutor;
+import org.resthub.core.context.config.ResthubComponentProvider;
 import org.resthub.core.context.jaxb.JAXBElementListExcluderBean;
 import org.resthub.core.context.jaxb.JAXBElementListIncluderBean;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -11,7 +12,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
  *
  * @author Loïc Frering <loic.frering@gmail.com>
  */
-class JAXBElementScanExecutor extends AbstractResthubScanExecutor<JAXBElementScanSpec> {
+final class JAXBElementScanExecutor extends AbstractResthubScanExecutor<JAXBElementScanSpec> {
 
     @Override
     protected ResthubComponentProvider createScanner(JAXBElementScanSpec spec) {

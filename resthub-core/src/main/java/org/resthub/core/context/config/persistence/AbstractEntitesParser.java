@@ -1,7 +1,6 @@
 package org.resthub.core.context.config.persistence;
 
 import org.resthub.core.context.config.AbstractResthubParser;
-import org.resthub.core.context.config.EntityScanSpec;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.context.config.FeatureSpecification;
 import org.w3c.dom.Element;

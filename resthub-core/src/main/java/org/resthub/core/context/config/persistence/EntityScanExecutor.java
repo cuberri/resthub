@@ -1,7 +1,8 @@
-package org.resthub.core.context.config;
+package org.resthub.core.context.config.persistence;
 
 import java.util.Set;
-import org.resthub.core.context.config.persistence.EntityComponentProvider;
+import org.resthub.core.context.config.AbstractResthubScanExecutor;
+import org.resthub.core.context.config.ResthubComponentProvider;
 import org.resthub.core.context.persistence.EntityListExcluderBean;
 import org.resthub.core.context.persistence.EntityListIncluderBean;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -11,7 +12,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
  *
  * @author Loïc Frering <loic.frering@gmail.com>
  */
-class EntityScanExecutor extends AbstractResthubScanExecutor<EntityScanSpec> {
+final class EntityScanExecutor extends AbstractResthubScanExecutor<EntityScanSpec> {
 
     @Override
     protected ResthubComponentProvider createScanner(EntityScanSpec spec) {

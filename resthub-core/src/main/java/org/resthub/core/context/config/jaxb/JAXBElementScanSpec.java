@@ -1,10 +1,13 @@
-package org.resthub.core.context.config;
+package org.resthub.core.context.config.jaxb;
+
+import org.resthub.core.context.config.AbstractResthubScanExecutor;
+import org.resthub.core.context.config.ResthubScanSpec;
 
 /**
  *
  * @author Loïc Frering <loic.frering@gmail.com>
  */
-public class JAXBElementScanSpec extends ResthubScanSpec {
+public final class JAXBElementScanSpec extends ResthubScanSpec {
     
     private static final Class<? extends AbstractResthubScanExecutor> EXECUTOR_TYPE = JAXBElementScanExecutor.class;
     

@@ -60,7 +60,7 @@ public abstract class ResthubScanSpec extends AbstractFeatureSpecification {
         return this;
     }
 
-    Type type() {
+    public Type type() {
         return type;
     }
 
@@ -76,7 +76,7 @@ public abstract class ResthubScanSpec extends AbstractFeatureSpecification {
         return this;
     }
 
-    Boolean useDefaultFilters() {
+    public Boolean useDefaultFilters() {
         return this.useDefaultFilters;
     }
 
