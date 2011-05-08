@@ -7,7 +7,7 @@ import org.resthub.core.context.config.ResthubScanSpec;
  *
  * @author Loïc Frering <loic.frering@gmail.com>
  */
-public final class EntityScanSpec extends ResthubScanSpec {
+public final class EntityScanSpec extends ResthubScanSpec<EntityScanSpec> {
 
     private static final Class<? extends AbstractResthubScanExecutor> EXECUTOR_TYPE = EntityScanExecutor.class;
     private String persistenceUnitName;

@@ -22,7 +22,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Loïc Frering <loic.frering@gmail.com>
  */
-public abstract class ResthubScanSpec extends AbstractFeatureSpecification {
+public abstract class ResthubScanSpec<S extends ResthubScanSpec> extends AbstractFeatureSpecification {
 
     public enum Type {
 
@@ -44,82 +44,82 @@ public abstract class ResthubScanSpec extends AbstractFeatureSpecification {
         }
     }
 
-    ResthubScanSpec addBasePackage(String basePackage) {
+    S addBasePackage(String basePackage) {
         if (StringUtils.hasText(basePackage)) {
             this.basePackages.add(basePackage);
         }
-        return this;
+        return (S) this;
     }
 
     String[] basePackages() {
         return this.basePackages.toArray(new String[this.basePackages.size()]);
     }
 
-    public ResthubScanSpec setType(Type type) {
+    public S setType(Type type) {
         this.type = type;
-        return this;
+        return (S) this;
     }
 
     public Type type() {
         return type;
     }
 
-    public ResthubScanSpec useDefaultFilters(Boolean useDefaultFilters) {
+    public S useDefaultFilters(Boolean useDefaultFilters) {
         this.useDefaultFilters = useDefaultFilters;
-        return this;
+        return (S) this;
     }
 
-    public ResthubScanSpec useDefaultFilters(String useDefaultFilters) {
+    public S useDefaultFilters(String useDefaultFilters) {
         if (StringUtils.hasText(useDefaultFilters)) {
             this.useDefaultFilters = Boolean.valueOf(useDefaultFilters);
         }
-        return this;
+        return (S) this;
     }
 
     public Boolean useDefaultFilters() {
         return this.useDefaultFilters;
     }
 
-    public ResthubScanSpec includeFilters(TypeFilter... includeFilters) {
+    public S includeFilters(TypeFilter... includeFilters) {
         this.includeFilters.clear();
         for (TypeFilter filter : includeFilters) {
             addIncludeFilter(filter);
         }
-        return this;
+        return (S) this;
     }
 
-    public ResthubScanSpec addIncludeFilter(TypeFilter includeFilter) {
+    public S addIncludeFilter(TypeFilter includeFilter) {
         Assert.notNull(includeFilter, "includeFilter must not be null");
         this.includeFilters.add(includeFilter);
-        return this;
+        return (S) this;
     }
 
-    public ResthubScanSpec addIncludeFilter(String filterType, String expression, ClassLoader classLoader) {
+    public S addIncludeFilter(String filterType, String expression, ClassLoader classLoader) {
         this.includeFilters.add(new FilterTypeDescriptor(filterType, expression, classLoader));
-        return this;
+        return (S) this;
     }
 
     TypeFilter[] includeFilters() {
         return this.includeFilters.toArray(new TypeFilter[this.includeFilters.size()]);
     }
 
-    public ResthubScanSpec excludeFilters(TypeFilter... excludeFilters) {
+    public S excludeFilters(TypeFilter... excludeFilters) {
         this.excludeFilters.clear();
         for (TypeFilter filter : excludeFilters) {
             addExcludeFilter(filter);
         }
-        return this;
+        return (S) this;
     }
 
-    public ResthubScanSpec addExcludeFilter(TypeFilter excludeFilter) {
+    public S addExcludeFilter(TypeFilter excludeFilter) {
         Assert.notNull(excludeFilter, "excludeFilter must not be null");
         this.excludeFilters.add(excludeFilter);
-        return this;
+        return (S) this;
     }
 
-    public ResthubScanSpec addExcludeFilter(String filterType, String expression, ClassLoader classLoader) {
+    public S addExcludeFilter(String filterType, String expression, ClassLoader classLoader) {
         this.excludeFilters.add(new FilterTypeDescriptor(filterType, expression, classLoader));
-        return this;
+        return (S) this;
     }
 
     TypeFilter[] excludeFilters() {
