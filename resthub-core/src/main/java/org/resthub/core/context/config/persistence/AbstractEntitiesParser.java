@@ -16,7 +16,7 @@ import org.w3c.dom.NodeList;
  * @author bmeurant <Baptiste Meurant>
  * @author Loïc Frering <loic.frering@gmail.com>
  */
-public abstract class AbstractEntitesParser extends AbstractResthubParser {
+public abstract class AbstractEntitiesParser extends AbstractResthubParser {
 
     private static final String DEFAULT_PERSISTENCE_UNIT_NAME = "resthub";
 
@@ -27,11 +27,9 @@ public abstract class AbstractEntitesParser extends AbstractResthubParser {
         EntityScanSpec spec = new EntityScanSpec(element.getAttribute("base-package"));
         spec.useDefaultFilters(element.getAttribute("use-default-filters"));
 
-        String persistenceUnitName = DEFAULT_PERSISTENCE_UNIT_NAME;
         if (element.hasAttribute("persistence-unit-name")) {
-            persistenceUnitName = element.getAttribute("persistence-unit-name");
+            spec.persistenceUnitName(element.getAttribute("persistence-unit-name"));
         }
-        spec.setPersistenceUnitName(persistenceUnitName);
 
         // Parse exclude and include filter elements.
         NodeList nodeList = element.getChildNodes();

@@ -1,5 +1,6 @@
 package org.resthub.core.context.jaxb;
 
+import org.resthub.core.context.feature.ResthubJAXBElementScanTestFeatures;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -13,6 +14,8 @@ import org.resthub.core.context.model.ConfigResourceOne;
 import org.resthub.core.context.model.ConfigResourceThree;
 import org.resthub.core.context.model.ConfigResourceTwo;
 import org.resthub.core.model.Resource;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
@@ -297,5 +300,44 @@ public class TestJAXBElementsContextScanning {
 					.contains(ConfigResourceFour.class.getName()));
 
 		}
+        
+        @Test
+        public void testJavaFeatureConfiguration() {
+            ApplicationContext context = new AnnotationConfigApplicationContext(ResthubJAXBElementScanTestFeatures.class);
+            
+            JAXBElementListContextBean elementListContextBean = (JAXBElementListContextBean) context.getBean("JAXBElementListContext");		
+			
+			elementListContextBean.clear();
+			Set<String> xmlElements = elementListContextBean.getXmlElements();
+
+			assertNotNull("xmlElements list should not be null", xmlElements);
+			assertFalse("xmlElements should not be empty", xmlElements.isEmpty());
+			assertTrue("at least 1 xmlElements should have been found",
+					xmlElements.size() >= 1);
+
+			assertFalse("xmlElements list should not contain "
+					+ Resource.class.getSimpleName(), xmlElements
+					.contains(Resource.class.getName()));
+
+			assertTrue("xmlElements list should contain "
+					+ ConfigResourceOne.class.getSimpleName(), xmlElements
+					.contains(ConfigResourceOne.class.getName()));
+			
+			assertFalse("xmlElements list should not contain "
+					+ ConfigResourceThree.class.getSimpleName(), xmlElements
+					.contains(ConfigResourceThree.class.getName()));
+			
+			assertFalse("xmlElements list should not contain "
+					+ ConfigAbstractResource.class.getSimpleName(), xmlElements
+					.contains(ConfigAbstractResource.class.getName()));
+
+			assertFalse("xmlElements list should not contain "
+					+ ConfigResourceTwo.class.getSimpleName(), xmlElements
+					.contains(ConfigResourceTwo.class.getName()));
+			
+			assertFalse("xmlElements list should not contain "
+					+ ConfigResourceFour.class.getSimpleName(), xmlElements
+					.contains(ConfigResourceFour.class.getName()));
+        }
 		
 }

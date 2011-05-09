@@ -7,12 +7,15 @@ import static org.junit.Assert.assertTrue;
 import java.util.Set;
 
 import org.junit.Test;
+import org.resthub.core.context.feature.ResthubEntityScanTestFeatures;
 import org.resthub.core.context.model.ConfigAbstractResource;
 import org.resthub.core.context.model.ConfigResourceFour;
 import org.resthub.core.context.model.ConfigResourceOne;
 import org.resthub.core.context.model.ConfigResourceThree;
 import org.resthub.core.context.model.ConfigResourceTwo;
 import org.resthub.core.model.Resource;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class TestPersistenceEntitiesContextScanning {
@@ -458,6 +461,45 @@ public class TestPersistenceEntitiesContextScanning {
 				+ ConfigResourceFour.class.getSimpleName(), configEntities
 				.contains(ConfigResourceFour.class.getName()));
 		
+	}
+    
+    @Test
+	public void testJavaFeatureConfiguration() {
+        ApplicationContext context = new AnnotationConfigApplicationContext(ResthubEntityScanTestFeatures.class);
+
+		EntityListContextBean entityListContextBean = (EntityListContextBean)context.getBean("entityListContextBean");		
+		
+		entityListContextBean.clearPersistenceUnit("resthub");
+		Set<String> entities = entityListContextBean.getEntities("resthub");
+
+		assertNotNull("entities list should not be null", entities);
+		assertFalse("entities should not be empty", entities.isEmpty());
+		assertTrue("more than 2 entities should have been found", entities
+				.size() >= 2);
+
+		assertFalse("entities list should not contain "
+				+ ConfigAbstractResource.class.getSimpleName(), entities
+				.contains(ConfigAbstractResource.class.getName()));
+
+		assertFalse("entities list should not contain "
+				+ Resource.class.getSimpleName(), entities
+				.contains(Resource.class.getName()));
+
+		assertTrue("entities list should contain "
+				+ ConfigResourceOne.class.getSimpleName(), entities
+				.contains(ConfigResourceOne.class.getName()));
+
+		assertTrue("entities list should contain "
+				+ ConfigResourceTwo.class.getSimpleName(), entities
+				.contains(ConfigResourceTwo.class.getName()));
+
+		assertFalse("entities list should not contain "
+				+ ConfigResourceThree.class.getSimpleName(), entities
+				.contains(ConfigResourceThree.class.getName()));
+		
+		assertFalse("entities list should not contain "
+				+ ConfigResourceFour.class.getSimpleName(), entities
+				.contains(ConfigResourceFour.class.getName()));
 	}
 
 }

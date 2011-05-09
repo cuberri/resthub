@@ -24,14 +24,11 @@ import org.springframework.util.StringUtils;
  */
 public abstract class ResthubScanSpec<S extends ResthubScanSpec> extends AbstractFeatureSpecification {
 
-    public enum Type {
-
+    public enum ScanType {
         EXCLUDER, INCLUDER;
     }
-    //private static final int EXCLUDER = 0;
-    //private static final int EXCLUDER = 1;
     private List<String> basePackages = new ArrayList<String>();
-    private Type type = Type.INCLUDER;
+    private ScanType type = ScanType.INCLUDER;
     private Boolean useDefaultFilters;
     private List<Object> includeFilters = new ArrayList<Object>();
     private List<Object> excludeFilters = new ArrayList<Object>();
@@ -55,12 +52,12 @@ public abstract class ResthubScanSpec<S extends ResthubScanSpec> extends Abstrac
         return this.basePackages.toArray(new String[this.basePackages.size()]);
     }
 
-    public S setType(Type type) {
+    public S type(ScanType type) {
         this.type = type;
         return (S) this;
     }
 
-    public Type type() {
+    public ScanType type() {
         return type;
     }
 
