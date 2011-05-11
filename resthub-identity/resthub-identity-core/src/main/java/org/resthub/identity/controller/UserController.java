@@ -26,7 +26,6 @@ import org.resthub.identity.tools.PermissionsOwnerTools;
 import org.resthub.web.controller.GenericResourceController;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Transactional;
 
 @Path("/user")
 /**
