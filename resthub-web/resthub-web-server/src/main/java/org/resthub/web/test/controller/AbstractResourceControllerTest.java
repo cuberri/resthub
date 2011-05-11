@@ -1,6 +1,5 @@
 package org.resthub.web.test.controller;
 
-import java.io.Serializable;
 import org.resthub.core.model.Resource;
 import org.resthub.core.service.GenericResourceService;
 import org.resthub.core.util.ClassUtils;
@@ -16,7 +15,7 @@ public abstract class AbstractResourceControllerTest<T extends Resource, S exten
 	 * Returns the resource class
 	 */
 	@Override
-	public Class<? extends Resource> getResourceClass() throws Exception {
+	public Class<? extends Resource> getResourceClass() {
 		return createTestResource().getClass();
 	}
 
@@ -27,7 +26,17 @@ public abstract class AbstractResourceControllerTest<T extends Resource, S exten
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected T createTestResource() throws Exception {
-		return (T) ClassUtils.getGenericTypeFromBean(this.controller).newInstance();
+	protected T createTestResource() {
+	    try {
+            return (T) ClassUtils.getGenericTypeFromBean(this.controller)
+                    .newInstance();
+        } catch (InstantiationException e) {
+            logger.error("Cannot instantiate instance of "
+                    + ClassUtils.getGenericTypeFromBean(this.controller));
+        } catch (IllegalAccessException e) {
+            logger.error("Cannot access nullarity constructor for class "
+                    + ClassUtils.getGenericTypeFromBean(this.controller));
+        }
+        return null;
 	}
 }

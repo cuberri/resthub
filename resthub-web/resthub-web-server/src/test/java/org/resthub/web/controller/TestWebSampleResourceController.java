@@ -21,7 +21,7 @@ public class TestWebSampleResourceController extends AbstractResourceControllerT
 	}
 
 	@Override
-	public void testUpdate() throws Exception {
+	public void testUpdate() {
 		WebSampleResource r1 = new WebSampleResource();
 		r1.setName("r1");
 
@@ -40,4 +40,5 @@ public class TestWebSampleResourceController extends AbstractResourceControllerT
 		Assert.assertFalse("Resource not updated", response.contains("r1"));
 		Assert.assertTrue("Resource not updated", response.contains("r2"));
 	}
+	
 }
