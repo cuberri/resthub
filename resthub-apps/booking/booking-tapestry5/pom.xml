@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>booking</artifactId>
@@ -26,9 +27,7 @@
 			<version>1.1-SNAPSHOT</version>
 		</dependency>
 
-		<!--
-			We use RESThub core classes and dependencies built around Spring 3
-		-->
+		<!-- We use RESThub core classes and dependencies built around Spring 3 -->
 		<dependency>
 			<groupId>org.resthub</groupId>
 			<artifactId>resthub-tapestry5-integration</artifactId>
@@ -41,9 +40,7 @@
 			<version>1.1-SNAPSHOT</version>
 		</dependency>
 
-		<!-- 
-			Tapx Core : include kaptcha component
-		-->
+		<!-- Tapx Core : include kaptcha component -->
 		<dependency>
 			<groupId>com.howardlewisship</groupId>
 			<artifactId>tapx-core</artifactId>
@@ -64,6 +61,18 @@
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<configuration>
+					<instrumentation>
+						<excludes>
+							<exclude>org/resthub/booking/webapp/t5/**/*.class</exclude>
+						</excludes>
+					</instrumentation>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
