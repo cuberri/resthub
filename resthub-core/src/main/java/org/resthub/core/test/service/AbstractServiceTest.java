@@ -57,7 +57,7 @@ public abstract class AbstractServiceTest<T, PK extends Serializable, D extends 
     }
 
     @SuppressWarnings("unchecked")
-    protected T createTestRessource() {
+    protected T createTestEntity() {
         try {
             return (T) ClassUtils.getGenericTypeFromBean(this.service)
                     .newInstance();
@@ -74,7 +74,7 @@ public abstract class AbstractServiceTest<T, PK extends Serializable, D extends 
 
     @Before
     public void setUp() {
-        T resource = service.create(this.createTestRessource());
+        T resource = service.create(this.createTestEntity());
         this.id = getIdFromEntity(resource);
     }
 
@@ -89,7 +89,7 @@ public abstract class AbstractServiceTest<T, PK extends Serializable, D extends 
 
     @Test
     public void testCreate() {
-        T resource = service.create(this.createTestRessource());
+        T resource = service.create(this.createTestEntity());
 
         T foundResource = service.findById(getIdFromEntity(resource));
         Assert.assertNotNull("Resource not created!", foundResource);

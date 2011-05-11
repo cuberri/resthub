@@ -31,7 +31,7 @@ public class RoleServiceTest extends AbstractResourceServiceTest<Role, RoleServi
     }
 
     @Override
-    public Role createTestRessource() {
+    public Role createTestEntity() {
         Role testRole = new Role(generateRandomRoleName());
         return testRole;
     }
@@ -39,7 +39,7 @@ public class RoleServiceTest extends AbstractResourceServiceTest<Role, RoleServi
     @Override
     public void testUpdate() {
         // Given a new role
-        Role testRole = this.createTestRessource();
+        Role testRole = this.createTestEntity();
         testRole = this.service.create(testRole);
 
         // When I update this role
@@ -54,7 +54,7 @@ public class RoleServiceTest extends AbstractResourceServiceTest<Role, RoleServi
     @Test
     public void shouldFindByName() {
         // Given a new role
-        Role r = this.createTestRessource();
+        Role r = this.createTestEntity();
         r = this.service.create(r);
 
         // When I find it by name
@@ -68,7 +68,7 @@ public class RoleServiceTest extends AbstractResourceServiceTest<Role, RoleServi
     @Test
     public void shouldNotFindRoleWithWeirdName() {
         // Given a new role
-        Role r = this.createTestRessource();
+        Role r = this.createTestEntity();
         r = this.service.create(r);
 
         // When I find it with a weird name
@@ -81,7 +81,7 @@ public class RoleServiceTest extends AbstractResourceServiceTest<Role, RoleServi
     @Test
     public void shouldFindNameWithWildcard() {
         // Given a new role
-        Role r = this.createTestRessource();
+        Role r = this.createTestEntity();
         r = this.service.create(r);
 
         // When I search for a part of its name

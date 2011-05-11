@@ -28,7 +28,7 @@ public class TestUserService extends AbstractServiceTest<User, Long, UserService
 	}
 
 	@Override
-	protected User createTestRessource() {
+	protected User createTestEntity() {
 		user = new User();
 		user.setUsername("user" + new Random().nextInt(10000));
 		user.setEmail(Calendar.getInstance().getTimeInMillis()

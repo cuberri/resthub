@@ -23,7 +23,7 @@ public class StandaloneEntityServiceTest extends
     }
 
     @Override
-    protected StandaloneEntity createTestRessource() {
+    protected StandaloneEntity createTestEntity() {
         StandaloneEntity standaloneEntity = new StandaloneEntity();
         standaloneEntity.setName("test");
         return standaloneEntity;

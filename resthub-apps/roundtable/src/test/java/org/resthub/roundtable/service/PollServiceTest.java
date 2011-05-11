@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.resthub.core.test.service.AbstractResourceServiceTest;
 import org.resthub.roundtable.model.Answer;
 import org.resthub.roundtable.model.Poll;
+import org.resthub.roundtable.service.common.ServiceException;
 
  /**
  * Test of Poll services.
@@ -21,12 +22,12 @@ public class PollServiceTest extends AbstractResourceServiceTest<Poll, PollServi
     @Inject
     @Named("pollService")
     @Override
-    public void setResourceService(PollService pollService) {
-        super.setResourceService(pollService);
+    public void setService(PollService pollService) {
+        super.setService(pollService);
     }
 
     @Override
-    protected Poll createTestRessource() throws Exception {
+    protected Poll createTestEntity() {
         Poll poll = new Poll();
         poll.setAuthor("me");
         poll.setBody("test poll");
@@ -47,20 +48,20 @@ public class PollServiceTest extends AbstractResourceServiceTest<Poll, PollServi
 
     @Override
     @Test
-    public void testUpdate() throws Exception {
-        Poll poll = resourceService.findById(this.resourceId);
+    public void testUpdate() {
+        Poll poll = service.findById(this.id);
         poll.setAuthor("somebody");
         poll.getAnswers().remove(1);
 
-        poll = resourceService.update(poll);
+        poll = service.update(poll);
         Assert.assertEquals("unable to update Poll", "somebody", poll.getAuthor());
         Assert.assertEquals("Unable to update Poll", 2, poll.getAnswers().size());
     }
 
     @Test
-    public void testFind() throws Exception {
-        resourceService.rebuildIndex();
-        List<Poll> polls = resourceService.find("test", null).asList();
+    public void testFind() throws ServiceException {
+        service.rebuildIndex();
+        List<Poll> polls = service.find("test", null).asList();
         Assert.assertEquals(1, polls.size());
     }
 }

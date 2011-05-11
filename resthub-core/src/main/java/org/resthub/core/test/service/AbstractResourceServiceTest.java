@@ -10,7 +10,7 @@ public abstract class AbstractResourceServiceTest<T extends Resource, D extends 
 
     @Test
     public void testCreate() {
-        T resource = service.create(this.createTestRessource());
+        T resource = service.create(this.createTestEntity());
 
         T foundResource = service.findById(resource.getId());
         Assert.assertNotNull("Resource not created!", foundResource);

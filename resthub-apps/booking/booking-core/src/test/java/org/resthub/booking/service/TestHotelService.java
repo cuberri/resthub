@@ -26,7 +26,7 @@ public class TestHotelService extends AbstractResourceServiceTest<Hotel, HotelSe
 	}
 	
 	@Override
-	protected Hotel createTestRessource() {
+	protected Hotel createTestEntity() {
 		hotel = new Hotel();
 		hotel.setName("testHotelName");
 		hotel.setAddress("testHotelAddress");
@@ -52,7 +52,7 @@ public class TestHotelService extends AbstractResourceServiceTest<Hotel, HotelSe
 	@Override
 	@Test
 	public void testCreate() {
-		hotel = this.createTestRessource();
+		hotel = this.createTestEntity();
 		hotel.setName(CHANGED_TEST_HOTEL_NAME);
 		hotel = service.create(hotel);
 		hotel = service.findById(hotel.getId());

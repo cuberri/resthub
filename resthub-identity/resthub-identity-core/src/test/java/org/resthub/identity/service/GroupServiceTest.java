@@ -30,7 +30,7 @@ public class GroupServiceTest extends
     protected EntityManager em;
 
     @Override
-    public Group createTestRessource() {
+    public Group createTestEntity() {
         String groupName = "GroupTestGroupName"
                 + Math.round(Math.random() * 1000);
         Group g = new Group();
@@ -86,7 +86,7 @@ public class GroupServiceTest extends
         testUser = userService.create(testUser);
 
         /* Given a group */
-        Group testGroup = this.createTestRessource();
+        Group testGroup = this.createTestEntity();
         testGroup.setName("testGroup");
         testGroup = service.create(testGroup);
 

@@ -41,7 +41,7 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
     private RoleService roleService;
 
     @Override
-    public User createTestRessource() {
+    public User createTestEntity() {
         String userLogin = "UserTestUserName" + Math.round(Math.random() * 1000);
         String userPassword = "UserTestUserPassword";
         User u = new User();
@@ -409,15 +409,15 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
 
         // Given some new users
         // u1 with role1
-        User u1 = this.createTestRessource();
+        User u1 = this.createTestEntity();
         u1.getRoles().add(r1);
         // u2 without any role
-        User u2 = this.createTestRessource();
+        User u2 = this.createTestEntity();
         // u3 with role2
-        User u3 = this.createTestRessource();
+        User u3 = this.createTestEntity();
         u3.getRoles().add(r2);
         // u4 with both role1 and role2
-        User u4 = this.createTestRessource();
+        User u4 = this.createTestEntity();
         u4.getRoles().add(r1);
         u4.getRoles().add(r2);
 
@@ -505,21 +505,21 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
 
         // Given some new users
         // u1 with direct role1 and inside group4
-        User u1 = this.createTestRessource();
+        User u1 = this.createTestEntity();
         u1.getRoles().add(r1); // add role1 to u1
         u1.getGroups().add(g4); // add group4 as parent of u1
 
         // u2 without any role and inside group3
-        User u2 = this.createTestRessource();
+        User u2 = this.createTestEntity();
         u2.getGroups().add(g3);
 
         // u3 without any role and inside group3 and group4
-        User u3 = this.createTestRessource();
+        User u3 = this.createTestEntity();
         u3.getGroups().add(g3);
         u3.getGroups().add(g4);
 
         // u4 with role4 and inside group3
-        User u4 = this.createTestRessource();
+        User u4 = this.createTestEntity();
         u4.getRoles().add(r4);
         u4.getGroups().add(g3);
 
@@ -636,21 +636,21 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
 
         // Given some new users
         // u1 with direct role1 and inside group4
-        User u1 = this.createTestRessource();
+        User u1 = this.createTestEntity();
         u1.getRoles().add(r1); // add role1 to u1
         u1.getGroups().add(g4); // add group4 as parent of u1
 
         // u2 without any role and inside group3
-        User u2 = this.createTestRessource();
+        User u2 = this.createTestEntity();
         u2.getGroups().add(g3);
 
         // u3 without any role and inside group3 and group4
-        User u3 = this.createTestRessource();
+        User u3 = this.createTestEntity();
         u3.getGroups().add(g3);
         u3.getGroups().add(g4);
 
         // u4 with role4 and inside group3
-        User u4 = this.createTestRessource();
+        User u4 = this.createTestEntity();
         u4.getRoles().add(r4);
         u4.getGroups().add(g3);
 
@@ -708,7 +708,7 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         r = this.roleService.create(r);
 
         // Given a new user
-        User u = this.createTestRessource();
+        User u = this.createTestEntity();
         u = this.service.create(u);
 
         // When I associate the user and the role
@@ -729,7 +729,7 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         r = this.roleService.create(r);
 
         // Given a new user associated to the previous role
-        User u = this.createTestRessource();
+        User u = this.createTestEntity();
         u = this.service.create(u);
         this.service.addRoleToUser(u.getLogin(), r.getName());
 

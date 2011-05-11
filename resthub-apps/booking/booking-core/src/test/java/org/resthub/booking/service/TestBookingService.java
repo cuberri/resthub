@@ -45,7 +45,7 @@ public class TestBookingService extends
     }
 
     @Override
-    protected Booking createTestRessource() {
+    protected Booking createTestEntity() {
         Hotel hotel = new Hotel();
         hotel.setName("testBookingName" + new Random().nextInt(10000));
         hotel.setAddress("testBookingAddress");
