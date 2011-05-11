@@ -16,6 +16,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
  * This class inherit {@link ResthubComponentProvider}
  * 
  * @author bmeurant <Baptiste Meurant>
+ * @author Loïc Frering <loic.frering@gmail.com>
  * 
  */
 public class JAXBElementComponentProvider extends ResthubComponentProvider {

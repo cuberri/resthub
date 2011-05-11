@@ -13,6 +13,7 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
  * all options and parameters handling from Spring configuration
  * 
  * @author bmeurant <Baptiste Meurant>
+ * @author Loïc Frering <loic.frering@gmail.com>
  * 
  */
 public abstract class ResthubComponentProvider extends ClassPathScanningCandidateComponentProvider {

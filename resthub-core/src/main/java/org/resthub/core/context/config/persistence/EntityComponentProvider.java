@@ -33,7 +33,7 @@ public class EntityComponentProvider extends ResthubComponentProvider {
 					false));
 			logger.info("javax.persistence.MappedSuperclass found and supported for entity scanning");
 		} catch (ClassNotFoundException ex) {
-			// javax.persistence.MappedSuperclass not available - simply skip.
+			logger.warn("javax.persistence.MappedSuperclass not available - simply skip");
 		}
 		try {
 			this.addIncludeFilter(new AnnotationTypeFilter(
@@ -41,7 +41,7 @@ public class EntityComponentProvider extends ResthubComponentProvider {
 							.loadClass("javax.persistence.Entity")), false));
 			logger.info("javax.persistence.Entity annotation found and supported for entity scanning");
 		} catch (ClassNotFoundException ex) {
-			// javax.persistence.Entity not available - simply skip.
+		    logger.warn("javax.persistence.Entity not available - simply skip");
 		}
 	}
 
