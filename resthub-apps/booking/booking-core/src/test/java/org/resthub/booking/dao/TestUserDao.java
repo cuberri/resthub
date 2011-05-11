@@ -26,7 +26,7 @@ public class TestUserDao extends AbstractDaoTest<User, Long, UserDao> {
 	}
 	
 	@Override
-	protected User createTestRessource() throws Exception {
+	protected User createTestEntity() {
 		User user = new User ();
 		this.testUsername = "user"+new Random().nextInt(10000);
 		user.setUsername(testUsername);
@@ -38,7 +38,7 @@ public class TestUserDao extends AbstractDaoTest<User, Long, UserDao> {
 
 	@Override
 	@Test
-	public void testUpdate() throws Exception {
+	public void testUpdate() {
 		
 		List<User> users = this.dao.findEquals("username", this.testUsername);
 		assertEquals("users list should contain an unique result", 1, users.size());

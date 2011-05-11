@@ -24,24 +24,27 @@ public class RoleDaoTest extends AbstractResourceDaoTest<Role, RoleDao> {
     @Inject
     @Named("roleDao")
     @Override
-    public void setResourceDao(RoleDao resourceDao) {
-        super.setResourceDao(resourceDao);
+    public void setDao(RoleDao resourceDao) {
+        super.setDao(resourceDao);
     }
 
+    /**
+     * {@InheritDoc}
+     */
     @Override
-    protected Role createTestRessource() throws Exception {
+    protected Role createTestEntity() {
         Role testRole = new Role(generateRandomRoleName());
         return testRole;
     }
 
     @Override
-    public void testUpdate() throws Exception {
+    public void testUpdate() {
         final String editedRoleName = generateRandomRoleName();
 
-        Role role1 = this.resourceDao.readByPrimaryKey(this.getRessourceId());
+        Role role1 = this.dao.readByPrimaryKey(this.id);
         role1.setName(editedRoleName);
-        resourceDao.save(role1);
-        Role role2 = resourceDao.readByPrimaryKey(this.getRessourceId());
+        dao.save(role1);
+        Role role2 = dao.readByPrimaryKey(this.id);
         assertEquals("Role not updated!", role2.getName(), editedRoleName);
     }
 }

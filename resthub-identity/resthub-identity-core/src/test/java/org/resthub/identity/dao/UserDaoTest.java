@@ -9,8 +9,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.resthub.core.test.dao.AbstractResourceDaoTest;
 import org.resthub.identity.model.Group;
@@ -32,8 +30,16 @@ public class UserDaoTest extends AbstractResourceDaoTest<User, UserDao> {
     @Inject
     @Named("userDao")
     @Override
-    public void setResourceDao(UserDao resourceDao) {
-        super.setResourceDao(resourceDao);
+    public void setDao(UserDao resourceDao) {
+        super.setDao(resourceDao);
+    }
+    
+    /**
+     * {@InheritDoc}
+     */
+    @Override
+    protected User createTestEntity() {
+        return createTestUser();
     }
 
     public User createTestUser() {
@@ -51,31 +57,22 @@ public class UserDaoTest extends AbstractResourceDaoTest<User, UserDao> {
         return g;
     }
 
-    @SuppressWarnings("unchecked")
-    @Before
     @Override
-    public void setUp() throws Exception {
-        User u = createTestUser();
-        u = resourceDao.save(u);
-        resourceId = u.getId();
-    }
-
-    @Override
-    public void testUpdate() throws Exception {
-        User u1 = resourceDao.readByPrimaryKey(this.getRessourceId());
+    public void testUpdate() {
+        User u1 = dao.readByPrimaryKey(this.id);
         u1.setEmail("test@plop.fr");
-        resourceDao.save(u1);
-        User u2 = resourceDao.readByPrimaryKey(this.getRessourceId());
+        dao.save(u1);
+        User u2 = dao.readByPrimaryKey(this.id);
         assertEquals("User not updated!", u2.getEmail(), "test@plop.fr");
     }
 
     @Test
     @Override
-    public void testSave() throws Exception {
+    public void testSave() {
         User u = createTestUser();
-        u = resourceDao.save(u);
+        u = dao.save(u);
 
-        User foundResource = resourceDao.readByPrimaryKey(u.getId());
+        User foundResource = dao.readByPrimaryKey(u.getId());
         assertNotNull("Resource not found!", foundResource);
     }
 
@@ -92,10 +89,10 @@ public class UserDaoTest extends AbstractResourceDaoTest<User, UserDao> {
         permissions.add("USER");
         u1.getPermissions().addAll(permissions);
 
-        resourceDao.save(u1);
+        dao.save(u1);
 
         //when we search  him by his login and password
-        List<User> l = resourceDao.findEquals("Login", login);
+        List<User> l = dao.findEquals("Login", login);
         assertNotNull(l);
 
         u1 = l.get(0);

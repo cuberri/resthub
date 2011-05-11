@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.resthub.core.test.dao.AbstractResourceDaoTest;
 import org.resthub.identity.model.Group;
@@ -20,37 +19,38 @@ public class GroupDaoTest extends AbstractResourceDaoTest<Group, PermissionsOwne
 	@Inject
 	@Named("groupDao")
 	@Override
-	public void setResourceDao(PermissionsOwnerDao<Group> resourceDao) {
-		super.setResourceDao(resourceDao);
+	public void setDao(PermissionsOwnerDao<Group> resourceDao) {
+		super.setDao(resourceDao);
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Before
-	public void setUp() throws Exception {
-		String groupName="GroupTestGroupName"+Math.round(Math.random()*1000);
-		Group g =new Group();
-		g.setName(groupName);
-		g = resourceDao.save(g);
-		resourceId = g.getId();
-	}
+	/**
+	 * {@InheritDoc}
+	 */
+	@Override
+    protected Group createTestEntity() {
+	    String groupName="GroupTestGroupName"+Math.round(Math.random()*1000);
+        Group g =new Group();
+        g.setName(groupName);
+        return g;
+    }
 
 	@Override
-	public void testUpdate() throws Exception {
-		Group g1 = resourceDao.readByPrimaryKey(this.getRessourceId());
+	public void testUpdate() {
+		Group g1 = dao.readByPrimaryKey(this.id);
 		g1.setName("GroupName");
-		resourceDao.save(g1);
-		Group g2 = resourceDao.readByPrimaryKey(this.getRessourceId());
+		dao.save(g1);
+		Group g2 = dao.readByPrimaryKey(this.id);
 		assertEquals("Group not updated!", g2.getName(), "GroupName");
 	}
 	
 	@Test
-	public void testSave() throws Exception {
+	public void testSave() {
 		Group g = new Group();
 		String groupName="groupTestNameSave";
 		g.setName(groupName);
-		g = resourceDao.save(g);
+		g = dao.save(g);
 
-		Group foundResource = resourceDao.readByPrimaryKey(g.getId());
+		Group foundResource = dao.readByPrimaryKey(g.getId());
 		assertNotNull("Resource not found!", foundResource);
 	}
 }

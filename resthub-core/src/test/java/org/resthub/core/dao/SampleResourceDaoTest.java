@@ -14,13 +14,13 @@ public class SampleResourceDaoTest
 	@Inject
 	@Named("sampleResourceDao")
 	@Override
-	public void setResourceDao(SampleResourceDao resourceDao) {
-		super.setResourceDao(resourceDao);
+	public void setDao(SampleResourceDao resourceDao) {
+		super.setDao(resourceDao);
 	}
 
 	@Override
 	@Test(expected = UnsupportedOperationException.class)
-	public void testUpdate() throws Exception {
+	public void testUpdate() {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 }

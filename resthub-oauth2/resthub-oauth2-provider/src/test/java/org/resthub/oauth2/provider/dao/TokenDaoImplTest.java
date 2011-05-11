@@ -19,9 +19,6 @@ import org.resthub.oauth2.common.model.Token;
  */
 public class TokenDaoImplTest extends AbstractDaoTest<Token, Long, TokenDao> {
 
-	// -----------------------------------------------------------------------------------------------------------------
-	// Attributes
-
 	/**
 	 * Sets the tested dao implementation
 	 * 
@@ -38,17 +35,14 @@ public class TokenDaoImplTest extends AbstractDaoTest<Token, Long, TokenDao> {
     public void setUp() throws Exception {
 		// Needed to cleanupdirty database
 		this.tearDown();
-		super.setUp();
+		super.setUpTestEntity();
     }
 	
-	// -----------------------------------------------------------------------------------------------------------------
-	// Tests
-
 	/**
 	 * Tests the creation, update and removal of a token.
 	 */
 	@Override
-	public void testUpdate() throws Exception {
+	public void testUpdate() {
 		Token token = new Token();
 		token.accessToken = "XXXXXX";
 		token.userId = "123456";
@@ -82,7 +76,7 @@ public class TokenDaoImplTest extends AbstractDaoTest<Token, Long, TokenDao> {
 		assertEquals("token's value should have changed", newValue, updated.accessToken);
 		assertEquals("token's user id name should have changed", newUserId, updated.userId);
 
-	} // testUpdate().
+	}
 	
 	/**
 	 * Test token retrieval.
@@ -99,6 +93,6 @@ public class TokenDaoImplTest extends AbstractDaoTest<Token, Long, TokenDao> {
 		assertEquals("Only one token must be returned", 1 , results.size());
 		assertTrue("Returned token not equals to expected one", results.contains(token));
 		
-	} // testFindEquals().
+	}
 
-} // class TokenDaoImplTest().
+}
