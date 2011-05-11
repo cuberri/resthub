@@ -26,8 +26,8 @@ public class RoleServiceTest extends AbstractResourceServiceTest<Role, RoleServi
     @Inject
     @Named("roleService")
     @Override
-    public void setResourceService(RoleService resourceService) {
-        super.setResourceService(resourceService);
+    public void setService(RoleService resourceService) {
+        super.setService(resourceService);
     }
 
     @Override
@@ -37,15 +37,15 @@ public class RoleServiceTest extends AbstractResourceServiceTest<Role, RoleServi
     }
 
     @Override
-    public void testUpdate() throws Exception {
+    public void testUpdate() {
         // Given a new role
         Role testRole = this.createTestRessource();
-        testRole = this.resourceService.create(testRole);
+        testRole = this.service.create(testRole);
 
         // When I update this role
         final String newRoleName = this.generateRandomRoleName();
         testRole.setName(newRoleName);
-        testRole = this.resourceService.update(testRole);
+        testRole = this.service.update(testRole);
 
         // Then the modification is done.
         assertEquals("Role not updated!", testRole.getName(), newRoleName);
@@ -55,10 +55,10 @@ public class RoleServiceTest extends AbstractResourceServiceTest<Role, RoleServi
     public void shouldFindByName() {
         // Given a new role
         Role r = this.createTestRessource();
-        r = this.resourceService.create(r);
+        r = this.service.create(r);
 
         // When I find it by name
-        Role roleFromName = this.resourceService.findByName(r.getName());
+        Role roleFromName = this.service.findByName(r.getName());
 
         // Then I can find it
         assertNotNull("The role should be found", roleFromName);
@@ -69,10 +69,10 @@ public class RoleServiceTest extends AbstractResourceServiceTest<Role, RoleServi
     public void shouldNotFindRoleWithWeirdName() {
         // Given a new role
         Role r = this.createTestRessource();
-        r = this.resourceService.create(r);
+        r = this.service.create(r);
 
         // When I find it with a weird name
-        Role roleFromName = this.resourceService.findByName("InventedNameThatShouldntBringAnyResult");
+        Role roleFromName = this.service.findByName("InventedNameThatShouldntBringAnyResult");
 
         // Then I can find it
         assertNull("No role should be found", roleFromName);
@@ -82,10 +82,10 @@ public class RoleServiceTest extends AbstractResourceServiceTest<Role, RoleServi
     public void shouldFindNameWithWildcard() {
         // Given a new role
         Role r = this.createTestRessource();
-        r = this.resourceService.create(r);
+        r = this.service.create(r);
 
         // When I search for a part of its name
-        List<Role> roles = this.resourceService.findByNameLike(r.getName().substring(0, 9) + "%");
+        List<Role> roles = this.service.findByNameLike(r.getName().substring(0, 9) + "%");
 
         // Then the list is not empty and contains our role
         assertFalse("The list of roles shouldn't be empty", roles.isEmpty());

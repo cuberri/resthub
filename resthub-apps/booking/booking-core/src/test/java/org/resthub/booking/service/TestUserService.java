@@ -28,7 +28,7 @@ public class TestUserService extends AbstractServiceTest<User, Long, UserService
 	}
 
 	@Override
-	protected User createTestRessource() throws Exception {
+	protected User createTestRessource() {
 		user = new User();
 		user.setUsername("user" + new Random().nextInt(10000));
 		user.setEmail(Calendar.getInstance().getTimeInMillis()
@@ -45,7 +45,7 @@ public class TestUserService extends AbstractServiceTest<User, Long, UserService
 
 	@Override
 	@Test
-	public void testUpdate() throws Exception {
+	public void testUpdate() {
 
 		user = this.service.findById(user.getId());
 		assertNotNull("user should not be null", user);

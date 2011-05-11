@@ -2,10 +2,10 @@ package org.resthub.identity.service;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +17,6 @@ import javax.inject.Named;
 
 import junit.framework.Assert;
 
-import org.junit.After;
 import org.junit.Test;
 import org.resthub.core.test.service.AbstractResourceServiceTest;
 import org.resthub.identity.model.Group;
@@ -30,12 +29,13 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
     @Inject
     @Named("userService")
     @Override
-    public void setResourceService(UserService resourceService) {
-        super.setResourceService(resourceService);
+    public void setService(UserService service) {
+        super.setService(service);
     }
     @Inject
     @Named("groupService")
     private GroupService groupService;
+    
     @Inject
     @Named("roleService")
     private RoleService roleService;
@@ -76,20 +76,20 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         User u2 = new User();
         u2.setLogin("u2");
 
-        u1 = resourceService.create(u1);
-        u2 = resourceService.create(u2);
+        u1 = service.create(u1);
+        u2 = service.create(u2);
 
-        resourceService.delete(u1);
-        resourceService.delete(u2);
+        service.delete(u1);
+        service.delete(u2);
 
-        Assert.assertNull(resourceService.findById(u1.getId()));
-        Assert.assertNull(resourceService.findById(u2.getId()));
+        Assert.assertNull(service.findById(u1.getId()));
+        Assert.assertNull(service.findById(u2.getId()));
 
     }
 
     @Override
     @Test
-    public void testUpdate() throws Exception {
+    public void testUpdate() {
         /* Given a new user */
         String firstName = "alexander";
         String firstNameAbr = "alex";
@@ -102,18 +102,18 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         u.setLastName(lastName);
         u.setPassword(password);
         u.setLogin(login);
-        u = this.resourceService.create(u);
+        u = this.service.create(u);
 
         // when we try to change some info (firstName) about the user and that we give the good password
         u = new User(u);
         u.setFirstName(firstNameAbr);
         u.setPassword(password);
-        u = resourceService.update(u);
+        u = service.update(u);
 
         // Then The modification is updated
         assertEquals(u.getFirstName(), firstNameAbr);
 
-        this.resourceService.delete(u);
+        this.service.delete(u);
     }
 
     @Test
@@ -125,18 +125,18 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         User u = new User();
         u.setLogin(login);
         u.setPassword(password);
-        resourceService.create(u);
+        service.create(u);
         // userService.create(u);
 
         /* When we search him with good login and password */
         // u = userService.authenticateUser(login, password);
 
-        u = resourceService.authenticateUser(login, password);
+        u = service.authenticateUser(login, password);
 
         /* Then we retrieve the good user */
         assertNotNull(u);
         assertEquals(u.getLogin(), login);
-        resourceService.delete(u);
+        service.delete(u);
         // userService.delete(u);
     }
 
@@ -151,20 +151,20 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         User u = new User();
         u.setLogin(login);
         u.setPassword(password1);
-        resourceService.create(u);
+        service.create(u);
 
         /* After that the password is updates */
         u.setPassword(password2);
-        u = resourceService.updatePassword(u);
+        u = service.updatePassword(u);
 
         /* When we search him with good login and password */
-        u = resourceService.authenticateUser(login, password2);
+        u = service.authenticateUser(login, password2);
 
         /* Then we retrieve the good user */
         assertNotNull(u);
         assertEquals(u.getLogin(), login);
 
-        resourceService.delete(u);
+        service.delete(u);
         // userService.delete(u);
     }
 
@@ -178,16 +178,16 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         User u = new User();
         u.setLogin(login);
         u.setPassword(password);
-        resourceService.create(u);
+        service.create(u);
         // userService.create(u);
 		/* When we search him providing a bad password */
-        User retrievedUser = resourceService.authenticateUser(login,
+        User retrievedUser = service.authenticateUser(login,
                 badPassword);
 
         /* Then the user is not retrieved */
         assertNull(retrievedUser);
 
-        resourceService.delete(u);
+        service.delete(u);
     }
 
     @Test
@@ -200,16 +200,16 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         User u = new User();
         u.setLogin(login);
         u.setPassword(password);
-        resourceService.create(u);
+        service.create(u);
 
         /* When we search him providing a bad login */
-        User retrievedUser = resourceService.authenticateUser(badLogin,
+        User retrievedUser = service.authenticateUser(badLogin,
                 password);
         /* Then the user is not retrieved */
 
         assertNull(retrievedUser);
 
-        this.resourceService.delete(u);
+        this.service.delete(u);
     }
 
     @Test
@@ -227,17 +227,17 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         u.setLogin(login);
         u.setPassword(password);
         u.getPermissions().addAll(permissions);
-        resourceService.create(u);
+        service.create(u);
 
         /* When we retrieved him after a search */
-        u = resourceService.findByLogin(login);
+        u = service.findByLogin(login);
 
         /* We can get the direct permissions */
         assertEquals("Permissions not found", 2, u.getPermissions().size());
         assertTrue("Permissions not found", u.getPermissions().contains("ADMIN"));
         assertTrue("Permissions not found", u.getPermissions().contains("USER"));
 
-        resourceService.delete(u);
+        service.delete(u);
 
     }
 
@@ -273,10 +273,10 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         u.setPassword(password);
         u.getPermissions().addAll(permissions);
         u.getGroups().add(group);
-        resourceService.create(u);
+        service.create(u);
 
         /* When we retrieved him after a search */
-        u = resourceService.findByLogin(login);
+        u = service.findByLogin(login);
 
         /* We can get the direct permissions */
         assertEquals("Permissions not found", 2, u.getPermissions().size());
@@ -284,7 +284,7 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         assertTrue("Permissions not found", u.getPermissions().contains("USER"));
 
         /* now with the permissions from groups */
-        List<String> allPermissions = resourceService.getUserPermissions(login);
+        List<String> allPermissions = service.getUserPermissions(login);
         assertEquals("Permissions not found", 4, allPermissions.size());
         assertTrue("Permissions not found", allPermissions.contains("ADMIN"));
         assertTrue("Permissions not found", allPermissions.contains("USER"));
@@ -292,7 +292,7 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         assertTrue("Permissions not found", allPermissions.contains("TESTSUBGROUPPERMISSION"));
 
         // TODO : remove this when we will use DBunit
-        resourceService.delete(u);
+        service.delete(u);
         groupService.delete(group);
         groupService.delete(subGroup);
     }
@@ -333,10 +333,10 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         u.setPassword(password);
         u.getPermissions().addAll(permissions);
         u.getGroups().add(group);
-        resourceService.create(u);
+        service.create(u);
 
         /* When we retrieved him after a search */
-        u = resourceService.findByLogin(login);
+        u = service.findByLogin(login);
 
         /* We can get the direct permissions */
         assertEquals("Permissions not found", 2, u.getPermissions().size());
@@ -344,7 +344,7 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         assertTrue("Permissions not found", u.getPermissions().contains("USER"));
 
         /* now with the permissions from groups */
-        List<String> allPermissions = resourceService.getUserPermissions(login);
+        List<String> allPermissions = service.getUserPermissions(login);
         assertEquals("Permissions not found", 4, allPermissions.size());
         assertTrue("Permissions not found", allPermissions.contains("ADMIN"));
         // the USER permission should exists only once in the list
@@ -353,7 +353,7 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         assertTrue("Permissions not found", allPermissions.contains("TESTSUBGROUPPERMISSION"));
 
         // TODO : remove this when we will use DBunit
-        resourceService.delete(u);
+        service.delete(u);
         groupService.delete(group);
         groupService.delete(subGroup);
     }
@@ -386,16 +386,16 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
 
         /* Given a link between this user and the group */
         u.getGroups().add(g);
-        u = this.resourceService.create(u);
+        u = this.service.create(u);
 
         /* When I get the users of the group */
-        List<User> usersFromGroup = this.resourceService.getUsersFromGroup(groupName);
+        List<User> usersFromGroup = this.service.getUsersFromGroup(groupName);
 
         /* Then the list of users contains our user */
         assertTrue("The list of users should contain our just added user", usersFromGroup.contains(u));
 
         /* Cleanup */
-        this.resourceService.delete(u);
+        this.service.delete(u);
         this.groupService.delete(g);
     }
 
@@ -421,16 +421,16 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         u4.getRoles().add(r1);
         u4.getRoles().add(r2);
 
-        u1 = this.resourceService.create(u1);
-        u2 = this.resourceService.create(u2);
-        u3 = this.resourceService.create(u3);
-        u4 = this.resourceService.create(u4);
+        u1 = this.service.create(u1);
+        u2 = this.service.create(u2);
+        u3 = this.service.create(u3);
+        u4 = this.service.create(u4);
 
         // When I look for users with roles
-        List<User> notExistingRoleUsers = this.resourceService.findAllUsersWithRoles(Arrays.asList("role"));
-        List<User> role1Users = this.resourceService.findAllUsersWithRoles(Arrays.asList("role1"));
-        List<User> role2Users = this.resourceService.findAllUsersWithRoles(Arrays.asList("role2"));
-        List<User> role1AndRole2Users = this.resourceService.findAllUsersWithRoles(Arrays.asList("role1", "role2"));
+        List<User> notExistingRoleUsers = this.service.findAllUsersWithRoles(Arrays.asList("role"));
+        List<User> role1Users = this.service.findAllUsersWithRoles(Arrays.asList("role1"));
+        List<User> role2Users = this.service.findAllUsersWithRoles(Arrays.asList("role2"));
+        List<User> role1AndRole2Users = this.service.findAllUsersWithRoles(Arrays.asList("role1", "role2"));
 
         // Then the lists should only contain what I asked for
         assertTrue("A search with an unknown role shouldn't bring anything", notExistingRoleUsers.isEmpty());
@@ -450,13 +450,13 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
 
         // TODO : remove this when we will use DBunit
         u1.getRoles().clear();
-        this.resourceService.update(u1);
+        this.service.update(u1);
         u2.getRoles().clear();
-        this.resourceService.update(u2);
+        this.service.update(u2);
         u3.getRoles().clear();
-        this.resourceService.update(u3);
+        this.service.update(u3);
         u4.getRoles().clear();
-        this.resourceService.update(u4);
+        this.service.update(u4);
         this.roleService.deleteAll();
     }
 
@@ -523,18 +523,18 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         u4.getRoles().add(r4);
         u4.getGroups().add(g3);
 
-        u1 = this.resourceService.create(u1);
-        u2 = this.resourceService.create(u2);
-        u3 = this.resourceService.create(u3);
-        u4 = this.resourceService.create(u4);
+        u1 = this.service.create(u1);
+        u2 = this.service.create(u2);
+        u3 = this.service.create(u3);
+        u4 = this.service.create(u4);
 
         // When I look for users with roles
-        List<User> notExistingRoleUsers = this.resourceService.findAllUsersWithRoles(Arrays.asList("role"));
-        List<User> role1Users = this.resourceService.findAllUsersWithRoles(Arrays.asList("role1"));
-        List<User> role2Users = this.resourceService.findAllUsersWithRoles(Arrays.asList("role2"));
-        List<User> role3Users = this.resourceService.findAllUsersWithRoles(Arrays.asList("role3"));
-        List<User> role4Users = this.resourceService.findAllUsersWithRoles(Arrays.asList("role4"));
-        List<User> role2AndRole3Users = this.resourceService.findAllUsersWithRoles(Arrays.asList("role2", "role3"));
+        List<User> notExistingRoleUsers = this.service.findAllUsersWithRoles(Arrays.asList("role"));
+        List<User> role1Users = this.service.findAllUsersWithRoles(Arrays.asList("role1"));
+        List<User> role2Users = this.service.findAllUsersWithRoles(Arrays.asList("role2"));
+        List<User> role3Users = this.service.findAllUsersWithRoles(Arrays.asList("role3"));
+        List<User> role4Users = this.service.findAllUsersWithRoles(Arrays.asList("role4"));
+        List<User> role2AndRole3Users = this.service.findAllUsersWithRoles(Arrays.asList("role2", "role3"));
 
         // Then the lists should only contain what I asked for
         assertTrue("A search with an unknown role shouldn't bring anything", notExistingRoleUsers.isEmpty());
@@ -568,16 +568,16 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         // TODO : remove this when we will use DBunit
         u1.getRoles().clear();
         u1.getGroups().clear();
-        this.resourceService.update(u1);
+        this.service.update(u1);
         u2.getRoles().clear();
         u2.getGroups().clear();
-        this.resourceService.update(u2);
+        this.service.update(u2);
         u3.getRoles().clear();
         u3.getGroups().clear();
-        this.resourceService.update(u3);
+        this.service.update(u3);
         u4.getRoles().clear();
         u4.getGroups().clear();
-        this.resourceService.update(u4);
+        this.service.update(u4);
 
         g1.getRoles().clear();
         this.groupService.update(g1);
@@ -654,16 +654,16 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         u4.getRoles().add(r4);
         u4.getGroups().add(g3);
 
-        u1 = this.resourceService.create(u1);
-        u2 = this.resourceService.create(u2);
-        u3 = this.resourceService.create(u3);
-        u4 = this.resourceService.create(u4);
+        u1 = this.service.create(u1);
+        u2 = this.service.create(u2);
+        u3 = this.service.create(u3);
+        u4 = this.service.create(u4);
 
         // When I ask for user roles
-        List<Role> u1Roles = this.resourceService.getAllUserRoles(u1.getLogin());
-        List<Role> u2Roles = this.resourceService.getAllUserRoles(u2.getLogin());
-        List<Role> u3Roles = this.resourceService.getAllUserRoles(u3.getLogin());
-        List<Role> u4Roles = this.resourceService.getAllUserRoles(u4.getLogin());
+        List<Role> u1Roles = this.service.getAllUserRoles(u1.getLogin());
+        List<Role> u2Roles = this.service.getAllUserRoles(u2.getLogin());
+        List<Role> u3Roles = this.service.getAllUserRoles(u3.getLogin());
+        List<Role> u4Roles = this.service.getAllUserRoles(u4.getLogin());
 
         // Then users should have the correct roles
         assertEquals("User1 should have 3 roles", 3, u1Roles.size());
@@ -678,16 +678,16 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
         // TODO : remove this when we will use DBunit
         u1.getRoles().clear();
         u1.getGroups().clear();
-        this.resourceService.update(u1);
+        this.service.update(u1);
         u2.getRoles().clear();
         u2.getGroups().clear();
-        this.resourceService.update(u2);
+        this.service.update(u2);
         u3.getRoles().clear();
         u3.getGroups().clear();
-        this.resourceService.update(u3);
+        this.service.update(u3);
         u4.getRoles().clear();
         u4.getGroups().clear();
-        this.resourceService.update(u4);
+        this.service.update(u4);
 
         g1.getRoles().clear();
         this.groupService.update(g1);
@@ -709,17 +709,17 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
 
         // Given a new user
         User u = this.createTestRessource();
-        u = this.resourceService.create(u);
+        u = this.service.create(u);
 
         // When I associate the user and the role
-        this.resourceService.addRoleToUser(u.getLogin(), r.getName());
+        this.service.addRoleToUser(u.getLogin(), r.getName());
 
         // Then I get the user with this role
-        User userWithRole = this.resourceService.findById(u.getId());
+        User userWithRole = this.service.findById(u.getId());
         assertTrue("The user should contain the role", userWithRole.getRoles().contains(r));
 
         // TODO : remove this when we will use DBunit
-        this.resourceService.removeRoleFromUser(u.getLogin(), r.getName());
+        this.service.removeRoleFromUser(u.getLogin(), r.getName());
     }
 
     @Test
@@ -730,14 +730,14 @@ public class UserServiceTest extends AbstractResourceServiceTest<User, UserServi
 
         // Given a new user associated to the previous role
         User u = this.createTestRessource();
-        u = this.resourceService.create(u);
-        this.resourceService.addRoleToUser(u.getLogin(), r.getName());
+        u = this.service.create(u);
+        this.service.addRoleToUser(u.getLogin(), r.getName());
 
         // When I remove the role from the user
-        this.resourceService.removeRoleFromUser(u.getLogin(), r.getName());
+        this.service.removeRoleFromUser(u.getLogin(), r.getName());
 
         // Then I get the user without this role
-        User userWithRole = this.resourceService.findById(u.getId());
+        User userWithRole = this.service.findById(u.getId());
         assertFalse("The user shouldn't contain the role", userWithRole.getRoles().contains(r));
 
         this.roleService.deleteAll();

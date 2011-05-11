@@ -32,10 +32,10 @@ public class TokenDaoImplTest extends AbstractDaoTest<Token, Long, TokenDao> {
 	}
 	
 	@Before
-    public void setUp() throws Exception {
+    public void setUp() {
 		// Needed to cleanupdirty database
 		this.tearDown();
-		super.setUpTestEntity();
+		super.setUp();
     }
 	
 	/**

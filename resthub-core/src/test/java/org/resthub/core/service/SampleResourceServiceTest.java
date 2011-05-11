@@ -13,12 +13,12 @@ public class SampleResourceServiceTest extends
 	@Inject
 	@Named("sampleResourceService")
 	public void setResourceService(SampleResourceService resourceService) {
-		super.setResourceService(resourceService);
+		super.setService(resourceService);
 	}
 
 	@Override
 	@Test(expected = UnsupportedOperationException.class)
-	public void testUpdate() throws Exception {
+	public void testUpdate() {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 }

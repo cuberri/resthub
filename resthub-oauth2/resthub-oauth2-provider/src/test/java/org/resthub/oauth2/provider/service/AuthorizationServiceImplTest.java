@@ -25,9 +25,6 @@ import org.resthub.oauth2.utils.Utils;
  */
 public class AuthorizationServiceImplTest extends AbstractServiceTest<Token, Long, AuthorizationService>{
 
-	// -----------------------------------------------------------------------------------------------------------------
-	// Attributes
-
 	/**
 	 * Sets the tested service implementation
 	 * 
@@ -38,7 +35,7 @@ public class AuthorizationServiceImplTest extends AbstractServiceTest<Token, Lon
 	@Override
 	public void setService(AuthorizationService Service) {
 		super.setService(Service);
-	} // setservice
+	} 
 
 	/**
 	 * {@inheritDoc}
@@ -50,16 +47,13 @@ public class AuthorizationServiceImplTest extends AbstractServiceTest<Token, Lon
 			id = obj.id;
 		}
 		return id;
-	} // getIdFromEntity().
-
-	// -----------------------------------------------------------------------------------------------------------------
-	// Tests
+	} 
 
 	/**
 	 * Tests the creation, update and removal of a token.
 	 */
 	@Override
-	public void testUpdate() throws Exception {
+	public void testUpdate() {
 		Token token = new Token();
 		token.accessToken = "XXXXXX";
 		token.userId = "789456";
@@ -105,7 +99,7 @@ public class AuthorizationServiceImplTest extends AbstractServiceTest<Token, Lon
 		service.delete(updated);
 
 		assertNull("token not deleted", service.findById(updated.id));
-	} // testUpdate().
+	} 
 	
 	/**
 	 * Test the token generation failure cases.
@@ -140,7 +134,7 @@ public class AuthorizationServiceImplTest extends AbstractServiceTest<Token, Lon
 			// All things right
 			assertEquals("The error case is not good", Error.INVALID_SCOPE, exc.errorCase);
 		}		
-	} // generateAccessTokenErrors().
+	} 
 
 	/**
 	 * Test the token generation.
@@ -160,7 +154,7 @@ public class AuthorizationServiceImplTest extends AbstractServiceTest<Token, Lon
 		
 		// Gets the token from database to check its existence.
 		assertEquals("Token not serialized", token, service.findById(token.id));		
-	} // generateAccessToken().
+	} 
 
 	
 	/**
@@ -174,7 +168,7 @@ public class AuthorizationServiceImplTest extends AbstractServiceTest<Token, Lon
 		} catch (IllegalArgumentException exc) {
 			// All things right
 		}		
-	} // getTokenInformationErrors().
+	} 
 
 	/**
 	 * Test the token retrieval.
@@ -221,7 +215,7 @@ public class AuthorizationServiceImplTest extends AbstractServiceTest<Token, Lon
 		assertEquals("Lifetimes not equal", token.lifeTime, retrievedToken.lifeTime);		
 		assertEquals("token has got permissions", 0, retrievedToken.permissions.size());
 
-	} // getTokenInformation().
+	} 
 	
 	@Test
 	public void shouldTokenBeRetrievedByCode() {
@@ -237,7 +231,7 @@ public class AuthorizationServiceImplTest extends AbstractServiceTest<Token, Lon
 		assertEquals(token.code, retrieved.code);
 		assertEquals(token.codeExpiry, retrieved.codeExpiry);
 		assertEquals(token.redirectUri, retrieved.redirectUri);
-	} // shouldTokenBeRetrievedByCode().
+	} 
 	
 	@Test
 	public void shouldUnknownTokenFail() {
@@ -250,7 +244,7 @@ public class AuthorizationServiceImplTest extends AbstractServiceTest<Token, Lon
 			assertEquals("The thrown Exception is not right", Error.INVALID_TOKEN, exc.errorCase);
 			
 		}
-	} // shouldUnknownTokenFail().
+	} 
 	
 	@Test
 	public void shouldUnknownCodeFail() {
@@ -263,21 +257,21 @@ public class AuthorizationServiceImplTest extends AbstractServiceTest<Token, Lon
 			assertEquals("The error case is not good", Error.INVALID_GRANT, exc.errorCase);
 			
 		}
-	} // shouldUnknownCodeFail().
+	} 
 
 	@Test(expected=IllegalArgumentException.class)
 	public void shouldGetTokenFromCodeFailOnNullCode() {
 		// When getting a token with a null code parameter.
 		service.getTokenFromCode(null, "http://localhost:9797/redirect");		
 		// Then an IllegalArgumentException is thrown.
-	} // shouldGetTokenFromCodeFailOnNullCode().
+	} 
 
 	@Test(expected=IllegalArgumentException.class)
 	public void shouldGetTokenFromCodeFailOnNullRedirectUri() {
 		// When getting a token with a null code parameter.
 		service.getTokenFromCode("123456AZERTY", null);		
 		// Then an IllegalArgumentException is thrown.
-	} // shouldGetTokenFromCodeFailOnNullRedirectUri().
+	} 
 
 	@Test
 	public void shouldMismatchUriFail() {
@@ -293,7 +287,7 @@ public class AuthorizationServiceImplTest extends AbstractServiceTest<Token, Lon
 			assertEquals("The error case is not good", Error.INVALID_GRANT, exc.errorCase);
 			
 		}
-	} // shouldMismatchUriFail().
+	} 
 
 	@Test
 	public void shouldExpiredTokenFail() {
@@ -314,7 +308,7 @@ public class AuthorizationServiceImplTest extends AbstractServiceTest<Token, Lon
 			// Then an exception is thrown
 			assertEquals("The error case is not good", Error.INVALID_GRANT, exc.errorCase);
 		}
-	} // shouldExpiredTokenFail().
+	} 
 
 	@Test
 	public void shouldCodeBeAddedToToken() {
@@ -334,7 +328,7 @@ public class AuthorizationServiceImplTest extends AbstractServiceTest<Token, Lon
 		assertEquals("Redirection URI not set", redirectUri, enhancedToken.redirectUri);
 		assertNotNull("Code not set", enhancedToken.code);
 		assertNotNull("Code expiry date not set", enhancedToken.codeExpiry);
-	} // shouldCodeBeAddedToToken().
+	} 
 	
 	@Test
 	public void shouldGenerateCodeFailedOnNullToken() {
@@ -345,7 +339,7 @@ public class AuthorizationServiceImplTest extends AbstractServiceTest<Token, Lon
 		} catch (IllegalArgumentException exc) {
 			// Then an exception is thrown.
 		}
-	} // shouldGenerateCodeFailedOnNullToken().
+	} 
 	
 	@Test
 	public void shouldGenerateCodeFailedOnNullRedirectUri() {
@@ -356,6 +350,6 @@ public class AuthorizationServiceImplTest extends AbstractServiceTest<Token, Lon
 		} catch (IllegalArgumentException exc) {
 			// Then an exception is thrown.
 		}
-	} // shouldGenerateCodeFailedOnNullRedirectUri().
+	} 
 	
-} // Classe AuthorizationServiceImplTest
+} 

@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractDaoTest<T, PK extends Serializable, D extends GenericDao<T, PK>>
         extends AbstractResthubTransactionalTest {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * The tested DAO
@@ -43,10 +43,6 @@ public abstract class AbstractDaoTest<T, PK extends Serializable, D extends Gene
      */
     public void setDao(D dao) {
         this.dao = dao;
-    }
-
-    public final Logger getLogger() {
-        return logger;
     }
 
     /**
@@ -88,7 +84,7 @@ public abstract class AbstractDaoTest<T, PK extends Serializable, D extends Gene
      * Initialize current test entity, save it and store generated id.
      */
     @Before
-    public void setUpTestEntity() {
+    public void setUp() {
         T resource = this.createTestEntity();
         resource = dao.save(resource);
         this.id = getIdFromEntity(resource);

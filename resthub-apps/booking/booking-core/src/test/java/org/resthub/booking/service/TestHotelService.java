@@ -21,12 +21,12 @@ public class TestHotelService extends AbstractResourceServiceTest<Hotel, HotelSe
 	@Override
 	@Inject
 	@Named("hotelService")
-	public void setResourceService(HotelService hotelService) {
-		this.resourceService = hotelService;
+	public void setService(HotelService hotelService) {
+		this.service = hotelService;
 	}
 	
 	@Override
-	protected Hotel createTestRessource() throws Exception {
+	protected Hotel createTestRessource() {
 		hotel = new Hotel();
 		hotel.setName("testHotelName");
 		hotel.setAddress("testHotelAddress");
@@ -39,23 +39,23 @@ public class TestHotelService extends AbstractResourceServiceTest<Hotel, HotelSe
 
 	@Override
 	@Test
-	public void testUpdate() throws Exception {
+	public void testUpdate() {
 		
-		hotel = this.resourceService.findById(hotel.getId());
+		hotel = this.service.findById(hotel.getId());
 		assertNotNull("hotel should not be null", hotel);
 		
 		hotel.setState(CHANGED_TEST_HOTEL_STATE);
-		hotel = this.resourceService.update(hotel);
+		hotel = this.service.update(hotel);
 		assertEquals("hotel name should have been modified", CHANGED_TEST_HOTEL_STATE, hotel.getState());
 	}
 	
 	@Override
 	@Test
-	public void testCreate() throws Exception {
+	public void testCreate() {
 		hotel = this.createTestRessource();
 		hotel.setName(CHANGED_TEST_HOTEL_NAME);
-		hotel = resourceService.create(hotel);
-		hotel = resourceService.findById(hotel.getId());
+		hotel = service.create(hotel);
+		hotel = service.findById(hotel.getId());
 		Assert.assertNotNull("Resource not created!", hotel);
 	}
 }
