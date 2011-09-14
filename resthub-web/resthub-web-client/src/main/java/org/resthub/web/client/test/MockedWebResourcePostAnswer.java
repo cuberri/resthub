@@ -12,12 +12,12 @@ import org.mockito.invocation.InvocationOnMock;
  *
  * @author Loïc Frering <loic.frering@gmail.com>
  */
-class MockedWebResourceGetAnswer extends AbstractMockedWebResourceAnswer {
+class MockedWebResourcePostAnswer extends AbstractMockedWebResourceAnswer {
     
     private final StringBuilder path;
     private final Map<String, Object> routes;
 
-    public MockedWebResourceGetAnswer(final StringBuilder path, final Map<String, Object> routes) {
+    public MockedWebResourcePostAnswer(final StringBuilder path, final Map<String, Object> routes) {
         this.path = path;
         this.routes = routes;
     }
@@ -26,25 +26,25 @@ class MockedWebResourceGetAnswer extends AbstractMockedWebResourceAnswer {
     public Object answer(InvocationOnMock invocation) throws Throwable {
         Object response = null;
         Class<?> type = (Class<?>) invocation.getArguments()[0];
+        Object object = invocation.getArguments()[1];
         if (type == ClientResponse.class) {
-            response = clientResponseAnswer();
+            response = clientResponseAnswer(object);
         } else {
-            response = entityAnswer();
+            response = entityAnswer(object);
         }
         // Reset path holder
         path.setLength(0);
         return response;
     }
     
-    private ClientResponse clientResponseAnswer() {
+    private ClientResponse clientResponseAnswer(Object object) {
         ClientResponse clientResponse = mockClientResponse();
         Status clientResponseStatus = null;
         
         for (String route : routes.keySet()) {
             if (route.equals(path.toString())) {
-                Object entity = routes.get(route);
-                clientResponseStatus = ClientResponse.Status.OK;
-                given(clientResponse.getEntity(entity.getClass())).willReturn(entity);
+                clientResponseStatus = ClientResponse.Status.CREATED;
+                given(clientResponse.getEntity(object.getClass())).willReturn(object);
                 break;
             }
         }
@@ -56,12 +56,12 @@ class MockedWebResourceGetAnswer extends AbstractMockedWebResourceAnswer {
         return clientResponse;
     }
     
-    private Object entityAnswer() {
+    private Object entityAnswer(Object object) {
         Object response = null;
         
         for (String route : routes.keySet()) {
             if (route.equals(path.toString())) {
-                response = routes.get(route);
+                response = object;
                 break;
             }
         }

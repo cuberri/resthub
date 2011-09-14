@@ -12,10 +12,20 @@ import java.util.Map;
  */
 public class WebResourceMockBuilder {
     private Map<String, Object> getRoutes = new HashMap<String, Object>();
+    private Map<String, Object> postRoutes = new HashMap<String, Object>();
     
     public WebResourceMockBuilder get(String path, Object response) {
         getRoutes.put(path, response);
         return this;
+    }
+    
+    public WebResourceMockBuilder post(String path, Object response) {
+        postRoutes.put(path, response);
+        return this;
+    }
+    
+    public WebResourceMockBuilder post(String path) {
+        return post(path, null);
     }
     
     public WebResource create() {
@@ -23,6 +33,7 @@ public class WebResourceMockBuilder {
         WebResource mockedResource = mock(WebResource.class);
         given(mockedResource.path(anyString())).will(new MockedWebResourcePathAnswer(pathHolder));
         given(mockedResource.get(any(Class.class))).will(new MockedWebResourceGetAnswer(pathHolder, getRoutes));
+        given(mockedResource.post(any(Class.class), anyObject())).will(new MockedWebResourcePostAnswer(pathHolder, postRoutes));
         return mockedResource;
     }
 }

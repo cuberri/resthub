@@ -1,8 +1,8 @@
 package org.resthub.web.client.test;
 
+import com.sun.jersey.api.client.ClientHandlerException;
 import static org.junit.Assert.*;
 
-import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
@@ -13,23 +13,23 @@ import org.junit.Test;
  *
  * @author Loïc Frering <loic.frering@gmail.com>
  */
-public class WebResourceMockBuilderGetTest {
+public class WebResourceMockBuilderPostTest {
     
     private WebResource mockedWebResource;
     
     @Before
     public void setUp() {
         WebResourceMockBuilder webResourceMockBuilder = new WebResourceMockBuilder();
-        webResourceMockBuilder.get("/user/loicfrering", new DummyUser("Loïc Frering"));
+        webResourceMockBuilder.post("/user");
         this.mockedWebResource = webResourceMockBuilder.create();
     }
     
     @Test
-    public void testGetClientResponseOk() {
-        ClientResponse response = mockedWebResource.path("/user").path("/loicfrering").get(ClientResponse.class);
+    public void testPostClientResponseOk() {
+        ClientResponse response = mockedWebResource.path("/user").post(ClientResponse.class, new DummyUser("Loïc Frering"));
         assertNotNull(response);
-        assertEquals(Status.OK, response.getClientResponseStatus());
-        assertEquals(200, response.getStatus());
+        assertEquals(Status.CREATED, response.getClientResponseStatus());
+        assertEquals(201, response.getStatus());
         
         DummyUser entity = response.getEntity(DummyUser.class);
         assertNotNull(entity);
@@ -37,22 +37,22 @@ public class WebResourceMockBuilderGetTest {
     }
     
     @Test
-    public void testGetClientResponseNotFound() {
-        ClientResponse response = mockedWebResource.path("/user").path("/lfrering").get(ClientResponse.class);
+    public void testPostClientResponseNotFound() {
+        ClientResponse response = mockedWebResource.path("/wrongpath").post(ClientResponse.class, new DummyUser("Loïc Frering"));
         assertNotNull(response);
         assertEquals(Status.NOT_FOUND, response.getClientResponseStatus());
         assertEquals(404, response.getStatus());
     }
     
     @Test
-    public void testGetEntityOk() {
-        DummyUser user = mockedWebResource.path("/user").path("/loicfrering").get(DummyUser.class);
+    public void testPostEntityOk() {
+        DummyUser user = mockedWebResource.path("/user").post(DummyUser.class, new DummyUser("Loïc Frering"));
         assertNotNull(user);
         assertEquals("Loïc Frering", user.getFullname());
     }
     
     @Test(expected=ClientHandlerException.class)
-    public void testGetEntityNotFound() {
-        DummyUser user = mockedWebResource.path("/user").path("/lfrering").get(DummyUser.class);
+    public void testPostEntityNotFound() {
+        DummyUser user = mockedWebResource.path("/wrongpath").post(DummyUser.class, new DummyUser("Loïc Frering"));
     }
 }
