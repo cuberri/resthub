@@ -11,8 +11,9 @@
     <description>Parent pom designed to be used in any RESThub based application. Mainly defined plugin and environments configuration.
     </description>
 
-   <properties>
+    <properties>
         <jersey.version>1.8</jersey.version>
+        <jersey.nio.version>1.9.1</jersey.nio.version>
         <jackson.version>1.7.8</jackson.version>
         <hibernate.version>3.6.4.Final</hibernate.version>
         <hibernate.validator.version>4.1.0.Final</hibernate.validator.version>
@@ -109,13 +110,11 @@
                 <artifactId>spring-security-web</artifactId>
                 <version>${spring.security.version}</version>
             </dependency>
-            
-			<dependency>
-				<groupId>org.springframework.data</groupId>
-				<artifactId>spring-data-jpa</artifactId>
-				<version>${spring.data.jpa.version}</version>
-			</dependency>
-
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-jpa</artifactId>
+                <version>${spring.data.jpa.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
@@ -167,7 +166,6 @@
                 <artifactId>hibernate-search</artifactId>
                 <version>${hibernate.search.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>log4j</groupId>
                 <artifactId>log4j</artifactId>
@@ -188,39 +186,33 @@
                 <artifactId>jcl-over-slf4j</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
                 <scope>compile</scope>
             </dependency>
-            
             <dependency>
                 <groupId>javax.annotation</groupId>
                 <artifactId>jsr250-api</artifactId>
                 <version>1.0</version>
             </dependency>
-
             <dependency>
                 <groupId>javax.inject</groupId>
                 <artifactId>javax.inject</artifactId>
                 <version>1</version>
             </dependency>
-
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>servlet-api</artifactId>
                 <version>2.5</version>
                 <scope>provided</scope>
             </dependency>
-
             <dependency>
                 <groupId>javax.validation</groupId>
                 <artifactId>validation-api</artifactId>
                 <version>1.0.0.GA</version>
             </dependency>
-
             <dependency>
                 <groupId>com.sun.jersey</groupId>
                 <artifactId>jersey-core</artifactId>
@@ -261,15 +253,22 @@
                         <artifactId>spring-aop</artifactId>
                     </exclusion>
                     <exclusion>
-		   				<groupId>com.sun.jersey</groupId>
-		   				<artifactId>jersey-grizzly2</artifactId>
-					</exclusion>
+                        <groupId>com.sun.jersey</groupId>
+                        <artifactId>jersey-grizzly2</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
+            <!--
             <dependency>
                 <groupId>com.sun.jersey.contribs</groupId>
-  				<artifactId>jersey-apache-client4</artifactId>
+                <artifactId>jersey-apache-client4</artifactId>
                 <version>${jersey.version}</version>
+            </dependency>
+            -->
+            <dependency>
+                <groupId>com.sun.jersey.contribs</groupId>
+                <artifactId>jersey-non-blocking-client</artifactId>
+                <version>${jersey.nio.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
@@ -281,7 +280,6 @@
                 <artifactId>jackson-xc</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>test-jetty-servlet</artifactId>
@@ -295,7 +293,7 @@
         </dependencies>
     </dependencyManagement>
     
-     <build>
+    <build>
         <pluginManagement>
             <plugins>
                 <plugin>
