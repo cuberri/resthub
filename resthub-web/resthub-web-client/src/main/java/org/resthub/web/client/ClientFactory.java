@@ -1,25 +1,29 @@
 package org.resthub.web.client;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
-import org.apache.http.conn.ssl.SSLSocketFactory;
+import com.ning.http.client.AsyncHttpClient;
+import com.sun.jersey.client.non.blocking.NonBlockingClient;
+import com.sun.jersey.client.non.blocking.config.DefaultNonBlockingClientConfig;
+import com.sun.jersey.client.non.blocking.config.NonBlockingClientConfig;
 import org.resthub.web.jackson.JacksonProvider;
 
-import com.sun.jersey.client.apache4.ApacheHttpClient4;
-import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
+
 
 public class ClientFactory {
 
     @SuppressWarnings("deprecation")
-	public static ApacheHttpClient4 create() {
-        DefaultApacheHttpClient4Config config = new DefaultApacheHttpClient4Config();
+	public static NonBlockingClient create() {
+        
+        NonBlockingClientConfig config = new DefaultNonBlockingClientConfig();
         config.getSingletons().add(new JacksonProvider());
-        ApacheHttpClient4 jerseyClient = ApacheHttpClient4.create(config);
-        HttpClient httpClient = jerseyClient.getClientHandler().getHttpClient();
+
+        
+        NonBlockingClient jerseyClient = NonBlockingClient.create(config);
+        AsyncHttpClient httpClient = jerseyClient.getClientHandlerNing().getHttpClient();
+        
         // Allow unsigned SSL certificates for testing purpose
         // TODO : control this thnaks to a properties value
-        SSLSocketFactory sf = (SSLSocketFactory) httpClient.getConnectionManager().getSchemeRegistry().getScheme("https").getSchemeSocketFactory();
-        sf.setHostnameVerifier(new AllowAllHostnameVerifier());
+        // SSLSocketFactory sf = (SSLSocketFactory) httpClient.getConnectionManager().getSchemeRegistry().getScheme("https").getSchemeSocketFactory();
+        // sf.setHostnameVerifier(new AllowAllHostnameVerifier());
         return jerseyClient;
     }
 
