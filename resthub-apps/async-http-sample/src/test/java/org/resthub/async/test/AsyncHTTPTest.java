@@ -108,7 +108,7 @@ public class AsyncHTTPTest extends AbstractWebTest {
     public void testMultipleSyncRequests() {
 
         // create a client instance using the ClientFactory
-        Client client = this.createClient();
+        NonBlockingClient client = this.createClient();
 
         final long startTime = System.nanoTime();
         final long endTime;
@@ -124,6 +124,7 @@ public class AsyncHTTPTest extends AbstractWebTest {
                     get(ClientResponse.class);
         } finally {
             endTime = System.nanoTime();
+            client.close();
         }
 
         // duration should be approx 3 + 2 = 5 seconds
@@ -141,11 +142,10 @@ public class AsyncHTTPTest extends AbstractWebTest {
     @Test
     public void testMultipleAsyncRequests() {
 
-        Client client = this.createClient();
+        NonBlockingClient client = this.createClient();
 
         final long startTime = System.nanoTime();
         final long endTime;
-
 
         // send async requests in parallel
         AsyncWebResource r1 = client.asyncResource(getUri().path("async").path("waitfor").path("3").build());
@@ -168,6 +168,7 @@ public class AsyncHTTPTest extends AbstractWebTest {
             logger.error(null, ex);
         } finally {
             endTime = System.nanoTime();
+            client.close();
         }
 
         // duration should be approx 3,2,1 in parallel -> 3 seconds total
